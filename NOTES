@@ -1,0 +1,5 @@
+Design patterns:
+        Factory (resp. abstract factory) = MemTraceEntry, MemTrace 
+        Singleton = MemStats, MemSimCalend
+        Model-View = model - MemTrace, view - MemVisualizer, QTableView
+        Model-View = model - MemDevice, view - QTreeView, MemDevSettings
