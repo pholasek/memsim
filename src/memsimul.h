@@ -12,6 +12,7 @@
 
 #include "memtrace.h"
 #include "memdevice.h"
+#include "memcalend.h"
 
 enum simstate {STOP = 0, RUN, STEP};
 
@@ -27,6 +28,7 @@ class MemSimulation
                 void dump_stats(); //TODO
                 void sim_trace(QString f_name); // MOVE TO PRIV
         private:
+		MemSimCalend cal;
 		int simid;
 		enum simstate state;
                 MemTrace trace;

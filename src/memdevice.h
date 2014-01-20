@@ -48,6 +48,7 @@ class MemDevice
                 void set_child(MemDevice *child) { this->child = child; }
                 MemDevice *get_child() { return child; }
                 MemDevice *get_parent() { return parent; }
+                int get_latency() { return latency; }
         protected:
                 int latency;
                 MemDevice *parent;
@@ -82,16 +83,26 @@ class MemDeviceCache : public MemDevice
                 MemDeviceCacheStats stats;
 };
 
-// memory access, tlbflush, ...
+// TODO1 memory access, tlbflush, ...
+// TODO2 implemantovat pomoci memory pool a rozdelit parametry do pod-struktury
 class MemDeviceEvent
 {
 	public:
 		MemDeviceEvent(MemDevice *memdev, mem_event op);
-		~MemDeviceEvent() {};
+		~MemDeviceEvent();
+		int set_info(quint64 addr, unsigned long size);
 		int do_op();
 	private:
 		mem_event op;
 		MemDevice *dev;
+		struct ev_info * info;
+
+};
+
+struct ev_info
+{
+	quint64 addr;
+	unsigned long size;
 };
 
 #endif

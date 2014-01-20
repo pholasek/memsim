@@ -182,21 +182,46 @@ void MemDeviceCacheStats::inc_miss() { miss++; }
  * MemDeviceEvent
  */
 
-MemDeviceEvent::MemDeviceEvent(MemDevice *memdev, mem_event op)
+MemDeviceEvent::MemDeviceEvent(MemDevice * memdev, mem_event op)
 {
 	this->op = op;
 	dev = memdev;
+	info = NULL;
 }
 
-MemDeviceEvent::do_op(void)
+MemDeviceEvent::~MemDeviceEvent()
 {
-	int ret;
+	if (info)
+		delete info;
+}
+
+int MemDeviceEvent::set_info(quint64 addr, unsigned long size)
+{
+	struct ev_info * info = new ev_info();
+	
+	if (!info)
+		return -1;
+
+	info->addr = addr;
+	info->size = size;
+
+	return 0;
+}
+
+int MemDeviceEvent::do_op()
+{
+	int ret = 0;
+
+	if (!info && (op == RREF || op == WREF))
+		return -1; //TODO vyjimky
 
 	switch (this->op) {
 		case RREF:
 		case WREF:
-			dev->do_mem_ref();
+			dev->do_mem_ref(info->addr, info->size);
 	}
+
+	return ret;
 }
 
 

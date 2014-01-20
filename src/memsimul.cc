@@ -57,16 +57,16 @@ void MemSimulation::reset_memsim()
 
 void MemSimulation::sim_trace(QString f_name)
 {
-   trace.get_trace(f_name);
+   trace.get_trace(f_name); // TODO 
    for (int i = 0; i < trace.get_size(); ++i) {
          MemTraceEntry e = trace.at(i);
          qDebug() << e.type << "-" << e.address << "-" << e.size;
          if (e.type == 'I')
-                 root_inst->do_mem_ref(e.address, e.size);
+                 cal.new_ref_event(root_inst, WREF, e.address, e.size, root_inst->get_latency(), 0);
          else if (e.type == 'L')
-                 root_data->do_mem_ref(e.address, e.size);
+                 cal.new_ref_event(root_inst, RREF, e.address, e.size, root_inst->get_latency(), 0);
          else
-                 root_data->do_mem_ref(e.address, e.size);
+		 qDebug() << "Invalid trace line.";
    }
 }
 
