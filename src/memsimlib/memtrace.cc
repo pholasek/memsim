@@ -9,6 +9,15 @@
  */
 
 #include "memtrace.h"
+#include "memexcept.h"
+//
+//! Interface class implementation
+
+MemTraceObj::MemTraceObj(QString path) : obj(new ::MemTrace(path)) {};
+
+MemTraceObj::~MemTraceObj() { delete obj; }
+
+QString MemTraceObj::dump_trace() { return obj->dump_trace(); }
 
 //! A constructors.
 MemTraceEntry::MemTraceEntry(char t, long a, long s)
@@ -18,18 +27,11 @@ MemTraceEntry::MemTraceEntry(char t, long a, long s)
         size = s;
 }
 
-//! A destructors.
-MemTrace::~MemTrace()
+MemTrace::MemTrace(QString path)
 {
-        trace.clear();
-}
-
-//! Method for parsing from file
-void MemTrace::get_trace(QString name)
-{
-        QFile file(name);
+        QFile file(path); //TODO mmap
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-                return;
+		throw TraceIOFile();
 
         trace.clear();
         while (!file.atEnd()) {
@@ -37,12 +39,23 @@ void MemTrace::get_trace(QString name)
                 process_line(line);
         }
 
-        file.close();
+	it = trace.begin();
+}
+
+//! A destructors.
+MemTrace::~MemTrace()
+{
+        trace.clear();
 }
 
 const MemTraceEntry & MemTrace::at(int i) const
 {
         return trace[i];
+}
+
+void MemTrace::reset_trace()
+{
+	it = trace.begin();
 }
 
 //! Size helper
@@ -66,3 +79,33 @@ void MemTrace::process_line(QString line)
 
         trace.append(new_entry);
 }
+
+const MemTraceEntry & MemTrace::current(void)
+{
+	return *it;
+}
+
+const MemTraceEntry & MemTrace::get_next(int * end)
+{
+	if (it != trace.constEnd() - 1) {
+		*end = 0;
+		return *(it++);
+	} else {
+		*end = 1;
+		return *it; 
+	}
+}
+
+//! Dump parsed trace
+QString MemTrace::dump_trace()
+{
+	QString trace_dump;
+
+	for (trace_it i = trace.begin(); i != trace.end(); ++i) {
+		MemTraceEntry e = *i;
+		trace_dump.append(QString("%1 %2 %3\n").arg(e.type).arg(e.address).arg(e.size));
+	}
+
+	return trace_dump;
+}
+

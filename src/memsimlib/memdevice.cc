@@ -9,58 +9,81 @@
  */
 
 #include "memdevice.h"
-#include "memtrace.h"
 
 /*
  * MemDevice
  */
 
-MemDevice::MemDevice(int latency = 0, MemDevice *parent = NULL)
+MemDevice::MemDevice(mem_t type = GENERIC, int latency = 1)
 {
         this->latency = latency;
-        this->parent = parent;
+        this->type = type;
 }
 
 /*
  * MemDeviceCache
  */
 
-MemDeviceCache::MemDeviceCache() : MemDevice(0, NULL)
-{
-}
+MemDeviceCache::MemDeviceCache() : MemDevice(L1_D, 1) {}
 
-MemDeviceCache::MemDeviceCache(int lat, long size, long lsize, long assoc, MemDevice *parent) :
-        MemDevice(lat, parent)
+MemDeviceCache::MemDeviceCache(mem_t type, int lat, long size, long lsize, long assoc) :
+        MemDevice(type, lat), tags(NULL)
 {
         this->size = size;
         this->lsize = lsize;
         this->assoc = assoc;
 
-        sets =          (size / lsize) / assoc;
-        sets_min_1 =    sets - 1;
+        sets = (size / lsize) / assoc;
+        sets_min_1 = sets - 1;
         line_size_bits = log2(lsize);
-        tag_shift =     line_size_bits + log2(sets);
+        tag_shift = line_size_bits + log2(sets);
 
-        // if (assoc = 1) .. TODO - vypisy
-
-        tags = (unsigned long int *) calloc(sets * assoc, sizeof(unsigned long int)); // should be zero-ed
+	tags = new unsigned long int[sets * assoc];
+	memset(tags, 0, sets * assoc);
 }
 
 MemDeviceCache::~MemDeviceCache()
 {
-        free(tags);
+	delete tags;
 }
 
-MemDeviceCacheStats MemDeviceCache::get_stats()
+void MemDeviceCache::refresh_cache()
 {
-        return stats;
+        sets = (size / lsize) / assoc;
+        sets_min_1 = sets - 1;
+        line_size_bits = log2(lsize);
+        tag_shift = line_size_bits + log2(sets);
+
+	if (!tags)
+		delete tags;
+	tags = new unsigned long int[sets * assoc];
+	memset(tags, 0, sets * assoc);
 }
 
+void MemDeviceCache::set_size(long size)
+{
+	size = size;
+	refresh_cache();
+}
+
+void MemDeviceCache::set_lsize(long lsize)
+{
+	lsize = lsize;
+	refresh_cache();
+}
+
+void MemDeviceCache::set_assoc(long assoc)
+{
+	assoc = assoc;
+	refresh_cache();
+}
+
+void MemDeviceCache::set_policy(policy_t policy) { pol = policy; }
 /*
  * Most of the source in this method was copied from Cachegrind tool, cg_sim.c
  */
 
-void MemDeviceCache::do_mem_ref(quint64 addr, long size)
+int MemDeviceCache::do_mem_ref(quint64 addr, quint64 size)
 {
    unsigned int  set1 = (addr >> line_size_bits) & (sets_min_1);
    unsigned int  set2 = ((addr+size-1) >> line_size_bits) & (sets_min_1);
@@ -81,7 +104,7 @@ void MemDeviceCache::do_mem_ref(quint64 addr, long size)
       /* common.  We can't unroll any further because it would screw up   */
       /* if we have a direct-mapped (1-way) cache.                        */
       if (tag == set[0]) {
-         return;
+         return HIT;
       }
       /* If the tag is one other than the MRU, move it into the MRU spot  */
       /* and shuffle the rest down.                                       */
@@ -91,7 +114,7 @@ void MemDeviceCache::do_mem_ref(quint64 addr, long size)
                set[j] = set[j - 1];
             }
             set[0] = tag;
-            return;
+            return HIT;
          }
       }
 
@@ -100,11 +123,8 @@ void MemDeviceCache::do_mem_ref(quint64 addr, long size)
          set[j] = set[j - 1];
       }
       set[0] = tag;
-      //MISS_TREATMENT;
       stats.inc_miss();
-      if (child != NULL)
-              child->do_mem_ref(addr, size);
-      return;
+      return FAULT;
 
    /* Second case: word straddles two lines. */
    /* Nb: this is a fast way of doing ((set1+1) % L.sets) */
@@ -149,15 +169,14 @@ block2:
       is_miss = true;
 miss_treatment:
       if (is_miss) {
-              stats.inc_miss();
-              if (child != NULL)
-                      child->do_mem_ref(addr, size);
+	      stats.inc_miss();
+	      return FAULT;
       }
 
    } else {
            qDebug() << "Cache panic!";
    }
-   return;
+   return FAULT;
 }
 
 /*--------------------------------------------------------------------*/
@@ -182,47 +201,78 @@ void MemDeviceCacheStats::inc_miss() { miss++; }
  * MemDeviceEvent
  */
 
-MemDeviceEvent::MemDeviceEvent(MemDevice * memdev, mem_event op)
+MemDeviceEvent::MemDeviceEvent(MemDevice * memdev, mem_event op) : op(op), dev(memdev), info() {}
+
+MemDeviceEvent::MemDeviceEvent(MemDevice * memdev, mem_event op, ev_info info) : op(op), dev(memdev), info(info) {}
+
+MemDeviceEvent::~MemDeviceEvent() {}
+
+void MemDeviceEvent::set_info(quint64 addr, quint64 size)
 {
-	this->op = op;
-	dev = memdev;
-	info = NULL;
-}
-
-MemDeviceEvent::~MemDeviceEvent()
-{
-	if (info)
-		delete info;
-}
-
-int MemDeviceEvent::set_info(quint64 addr, unsigned long size)
-{
-	struct ev_info * info = new ev_info();
-	
-	if (!info)
-		return -1;
-
-	info->addr = addr;
-	info->size = size;
-
-	return 0;
+	info = ev_info(addr, size);
 }
 
 int MemDeviceEvent::do_op()
 {
 	int ret = 0;
 
-	if (!info && (op == RREF || op == WREF))
+	if (info.size == 0 && (op == RREF || op == WREF))
 		return -1; //TODO vyjimky
 
-	switch (this->op) {
+	switch (op) {
 		case RREF:
 		case WREF:
-			dev->do_mem_ref(info->addr, info->size);
+			ret = dev->do_mem_ref(info.addr, info.size);
+			break;
+		case INST:
+			ret = dev->do_mem_ref(info.addr, info.size);
+			break;
 	}
 
 	return ret;
 }
 
+/*
+ * MemDeviceRAM
+ */
 
+MemDeviceRAM::MemDeviceRAM(int latency) : MemDevice(RAM, latency) {}
+
+int MemDeviceRAM::do_mem_ref(quint64 addr, quint64 size)
+{
+	stats.inc_ac();
+	return HIT;
+}
+
+/*
+ * MemDeviceSwap
+ */
+MemDeviceSwap::MemDeviceSwap(int latency) : MemDevice(SWAP, latency) {}
+
+int MemDeviceSwap::do_mem_ref(quint64 addr, quint64 size)
+{
+	stats.inc_ac();
+	return HIT;
+}
+
+/*
+ * MemDeviceCpu
+ */
+
+int MemDeviceCpu::do_mem_ref(quint64 addr, quint64 size)
+{
+	return 0;
+}
+
+void MemDeviceCpu::state_watchdog(quint64 curr_t)
+{
+	if (!curr_t || curr_t % freq != 0)
+		return;
+
+	/*
+	switch (state) {
+		case BUSY:
+	}
+	*/
+}
 

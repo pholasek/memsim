@@ -10,32 +10,41 @@
  *
  */
 
-#include "memsim.h"
-#include "QStringList"
+#include "memsimlib.h"
+#include <QList>
+#include <QString>
+
+//! Implementation class declaration
 
 enum ref_type {I = 0,L ,S };
 
 class MemTraceEntry
 {
         public:
-                MemTraceEntry() {};
+                MemTraceEntry() : type('I'), address(0), size(0) {};
                 MemTraceEntry(char t, long a, long s);
                 char type;
                 quint64 address;
                 quint64 size;
 };
 
+typedef QList<MemTraceEntry>::const_iterator trace_it;
+
 class MemTrace
 {
     public:
-            MemTrace() {};
+            MemTrace(QString path);
             ~MemTrace();
-            void get_trace(QString name);
             int get_size();
             const MemTraceEntry & at(int i) const;
+	    const MemTraceEntry & current(void);
+	    const MemTraceEntry & get_next(int * end);
+	    void reset_trace();
+	    QString dump_trace();
     private:
             QList<MemTraceEntry> trace;
             void process_line(QString line);
+	    trace_it it;
 };
 
 #endif
