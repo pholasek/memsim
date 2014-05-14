@@ -2,7 +2,7 @@
 #define MEMEXCEPT_H
 
 /*!
- * @file memexcept.h
+ * \file memexcept.h
  *
  * \brief This file contains source of MemSim exception classes.
  * \author Petr Holasek, xholas02@stud.fit.vutbr.cz

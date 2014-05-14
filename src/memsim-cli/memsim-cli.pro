@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = ./memsim-cli
+TARGET = ../bin/memsim-cli
 DEPENDPATH += ../memsimlib/
 INCLUDEPATH += ../memsimlib/
 LIBS += -L../memsimlib/ -lmemsimlib

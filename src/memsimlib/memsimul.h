@@ -1,9 +1,9 @@
 #ifndef MEMSIMUL_H
 #define MEMSIMUL_H
 
+//! Header file of MemSimulation class
 /*!
- * @file memsimul.h
- * Header file of MemSimulation class
+ * \file memsimul.h
  *
  * \brief MemSimulation class encapsulates simulated memory hierarchy
  * \author Petr Holasek, xholas02@stud.fit.vutbr.cz
@@ -22,34 +22,94 @@ class MemSimCalend;
 class MemDevice;
 class MemTrace;
 
+//! Class implementing basic simulator routines.
 class MemSimulation
 {
         public:
+		//! A constructor.
                 MemSimulation();
+		//! A destructor.
                 ~MemSimulation();
+		//! Initialize simulator.
 		void init_memsim();
+		//! Put simulator to init state.
 		void reset_memsim();
+		//! Start simulation.
 		void start_memsim();
+		//! Stop simulation.
 		void stop_memsim();
+		//! Run simulation of given trace.
+		/*!
+		 * \param[in] trace Trace object for simulation.
+		 * \sa ::MemTrace
+		 */
                 void sim_trace(MemTrace & trace);
+		//! Set parameter of object to value
+		/*!
+		 * \param[in] object Configured object.
+		 * \param[in] param Parameter to be configured.
+		 * \param[in] value New value of parameter.
+		 */
 		void set_cfg_param(QString & object, QString & param, QString & value);
+		//! Get parameter of object.
+		/*!
+		 * \param[in] object Object in model.
+		 * \param[in] param Parameter of object.
+		 * \returns Value of param.
+		 */
 		QVariant get_cfg_param(QString & object, QString & param);
+		//! Adds new device to model.
+		/*!
+		 * \param[in] name Name of device.
+		 */
 		void add_device(QString & name);
+		//! Remove device from model.
+		/*!
+		 * \param[in] name Name of device.
+		 */
 		void remove_device(QString & name);
+		//! Shows all devices in model
+		/*!
+		 * \return List of deviced by QString.
+		 */
 		QString show_devs();
+		//! Shows all devices stats in model
+		/*!
+		 * \return List of all statistics of devices in model.
+		 */
 		QString show_statsall();
         private:
+		//! Process single trace line
+		/*
+		 * \param[in] e Parsed trace line.
+		 * \return MemDevice where will be the access scheduled.
+		 */
 		MemDevice * process_inst(const MemTraceEntry & e);
+		//! Init devices in model.
 		void init_devices();
+		//! Set caches in model according to existing settings.
+		/*!
+		 * \param[in,out] groups Groups of keys in QSettings.
+		 * \param[in] name Name of cache.
+		 */
 		void process_cache(QStringList & groups, QString name);
+		//! Set RAM in model according to existing settings.
 		void process_ram(QStringList & groups);
+		//! Set swap in model according to existing settings.
 		void process_swap(QStringList & groups);
+		//! Set devices in model according to existing settings.
 		void process_devices(QStringList & groups);
+		//! Set other attributes of simulator to existing settings.
 		void process_settings(QStringList & groups);
+		//! Init settings.
 		void init_settings();
+		//! State of the simulation.
 		enum simstate state;
+		//! Simulation calendar.
 		MemSimCalend cal;
+		//! Simulation model.
 		MemHierarchy devs;
+		//! Simulator settings.
 		QSettings *settings;
 };
 

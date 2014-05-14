@@ -7,13 +7,15 @@
 
 PATH := /usr/lib64/qt4/bin/:$(PATH)
 
+.PHONY:	docs memsim
+
 all: memsim
 
 memsim:
 	cd src && qmake && cd -
 	make -C src
-clean:
-	rm -rf doc/html
+
+clean:	clean-docs
 	cd src && qmake
 	make -C src clean
 	cd -
@@ -21,8 +23,11 @@ tags:
 	cd src/
 	ctags *.cc *.h
 	cd ..
+docs:
+	doxygen Doxyfile
 
-#run: memsim
-#	cd src && ./memsim test/lackey.out.reduced
+clean-docs:
+	rm -rf docs/*
+
 
 

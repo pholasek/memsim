@@ -1,0 +1,18 @@
+MemSim - Memory hierarchy simulator
+===================================
+
+Components:
+	-library: memsimlib.so
+	-cli: memsim-cli
+	-gui: memsim-gui
+
+Library:
+	-library interface is exported via MemSimulationObj class;
+
+CLI:
+	-commands:
+		load <path> - load trace with given path
+		run <id> - run simulation of trace with id
+		show traces - show all loaded traces
+		show devices - show configured devices
+		show statsall - show stats of all devices
