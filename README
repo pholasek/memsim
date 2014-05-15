@@ -29,3 +29,6 @@ Example:
 	memsim> show statsall
 	memsim> ^D
 	$
+
+Source docs (doxygen required) :
+	make docs
