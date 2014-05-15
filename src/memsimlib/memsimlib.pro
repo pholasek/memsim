@@ -5,6 +5,7 @@
 TEMPLATE = lib
 DEPENDPATH += .
 INCLUDEPATH += .
+DESTDIR = ../../lib/
 DEFINES += MEMSIMLIB_LIBRARY
 CONFIG += debug
 QT += core

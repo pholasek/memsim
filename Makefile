@@ -26,6 +26,9 @@ tags:
 docs:
 	doxygen Doxyfile
 
+run-cli: memsim
+	LD_LIBRARY_PATH=./lib/ bin/memsim-cli
+
 clean-docs:
 	rm -rf docs/*
 

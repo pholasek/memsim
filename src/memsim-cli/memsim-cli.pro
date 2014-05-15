@@ -3,10 +3,9 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = ../bin/memsim-cli
-DEPENDPATH += ../memsimlib/
+DESTDIR = ../../bin/
 INCLUDEPATH += ../memsimlib/
-LIBS += -L../memsimlib/ -lmemsimlib
+LIBS += -L../../lib/ -lmemsimlib
 CONFIG += console debug
 QMAKE_CXXFLAGS += -Wfatal-errors
 
