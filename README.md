@@ -1,34 +1,40 @@
-MemSim - Memory hierarchy simulator
-===================================
+# MemSim - Memory hierarchy simulator
 
-Components:
-	-library: memsimlib.so
-	-cli: memsim-cli
-	-gui: memsim-gui
+## Components
 
-Library:
-	-library interface is exported via MemSimulationObj class;
+	- library: memsimlib.so
+	- cli: memsim-cli
+	- gui: memsim-gui
 
-CLI:
-	-commands:
-		load <path> - load trace with given path
-		run <id> - run simulation of trace with id
-		show traces - show all loaded traces
-		show devices - show configured devices
-		show statsall - show stats of all devices
+### Library
 
-Example:
-	$ make && make run-cli
-	memsim> add l1_i
-	memsim> add l1_d
-	memsim> add l2
-	memsim> add swap
-	memsim> show devices
-	memsim> load test/trace2
-	memsim> run 0
-	memsim> show statsall
-	memsim> ^D
-	$
+	library interface is exported via MemSimulationObj class
 
-Source docs (doxygen required) :
-	make docs
+### CLI
+
+	commands:
+		- `load <path>` - load trace with given path
+		- `run <id>` - run simulation of trace with id
+		- `show traces` - show all loaded traces
+		- `show devices` - show configured devices
+		- `show statsall` - show stats of all devices
+
+## Use
+
+Example: `$ make && make run-cli`
+	`memsim> add l1_i`
+	`memsim> add l1_d`
+	`memsim> add l2`
+	`memsim> add swap`
+	`memsim> show devices`
+	`memsim> load test/trace2`
+	`memsim> run 0`
+	`memsim> show statsall`
+	`memsim> ^D`
+	`$`
+
+## Docs
+
+doxygen package is required.
+
+generating docs: `$ make docs`

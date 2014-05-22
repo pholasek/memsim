@@ -112,10 +112,10 @@ void MemSimulation::process_cache(QStringList & groups, QString name)
 
 	if (!(groups.filter(name).isEmpty())) {
 		settings->beginGroup(name);
-		latency = settings->value("latency", 1).toInt();
-		size = settings->value("size", 65535).toULongLong();
-		lsize = settings->value("lsize", 512).toULongLong();
-		assoc = settings->value("assoc", 2).toULongLong();
+		latency = settings->value("latency", DEF_CACHE_LATENCY).toInt();
+		size = settings->value("size", DEF_CACHE_SIZE).toULongLong();
+		lsize = settings->value("lsize", DEF_CACHE_LSIZE).toULongLong();
+		assoc = settings->value("assoc", DEF_CACHE_ASSOC).toULongLong();
 		active = settings->value("active", false).toBool();
 		settings->endGroup();
 
@@ -123,6 +123,26 @@ void MemSimulation::process_cache(QStringList & groups, QString name)
 		if (active)
 			devs.add_cache(type, latency, size, lsize, assoc);
 		groups.removeAt(groups.indexOf(name));
+	}
+}
+
+void MemSimulation::process_tlb(QStringList & groups)
+{
+	int latency;
+	long entries, entrysize;
+	bool active;
+
+	if (!(groups.filter("tlb").isEmpty())) {
+		settings->beginGroup("tlb");
+		latency = settings->value("latency", DEF_TLB_LATENCY).toInt();
+		entries = settings->value("entries", DEF_TLB_ENTRIES).toULongLong();
+		entrysize = settings->value("entrysize", DEF_TLB_ENTRY_SIZE).toULongLong();
+		active = settings->value("active", false).toBool();
+		settings->endGroup();
+
+		if (active)
+			devs.add_tlb(entries, entrysize, latency);
+		groups.removeAt(groups.indexOf("ram"));
 	}
 }
 
@@ -208,6 +228,11 @@ void MemSimulation::reset_memsim()
 {
 }
 
+/*void MemSimulation::search_vm(const MemTraceEntry & e)
+{
+	cal.new_ref_event(devs.get_tlb(), RREF, e.address, e.size, devs.get_tlb()->get_latency(), 0);
+}*/
+
 /*
  * Returns starting device (D/I) for simulation
  */
@@ -281,6 +306,12 @@ void MemSimulation::set_cfg_param(QString & object, QString & param, QString & v
 		case SWAP:
 			devs.config_swap(param, value.toULong());
 			break;
+		case TLB:
+			devs.config_tlb(param, value.toULong());
+			break;
+		case PT:
+			devs.config_page_table(param, value.toULong());
+			break;
 		default:
 			throw UserInputBadArg();
 			break;
@@ -315,18 +346,30 @@ void MemSimulation::add_device(QString & name)
 			devs.add_cache(type,
 					settings->value("latency", DEF_CACHE_LATENCY).toUInt(),
 					settings->value("size", DEF_CACHE_SIZE).toUInt(),
-					settings->value("lsize", DEF_CACHE_LSIZE).toInt(),
-					settings->value("assoc", DEF_CACHE_ASSOC).toInt());
+					settings->value("lsize", DEF_CACHE_LSIZE).toUInt(),
+					settings->value("assoc", DEF_CACHE_ASSOC).toUInt());
 			settings->endGroup();
 			break;
 		case RAM:
 			settings->beginGroup("ram");
-			devs.add_ram(settings->value("latency", DEF_SWAP_LATENCY).toInt());
+			devs.add_ram(settings->value("latency", DEF_RAM_LATENCY).toUInt());
 			settings->endGroup();
 			break;
 		case SWAP:
-			settings->beginGroup("ram");
-			devs.add_swap(settings->value("latency", DEF_SWAP_LATENCY).toInt());
+			settings->beginGroup("swap");
+			devs.add_swap(settings->value("latency", DEF_SWAP_LATENCY).toUInt());
+			settings->endGroup();
+			break;
+		case TLB:
+			settings->beginGroup("tlb");
+			devs.add_tlb(settings->value("entries", DEF_TLB_ENTRIES).toUInt(),
+					settings->value("entrysize", DEF_TLB_ENTRY_SIZE).toUInt(),
+					settings->value("latency", DEF_TLB_LATENCY).toUInt());
+			settings->endGroup();
+			break;
+		case PT:
+			settings->beginGroup("pt");
+			devs.add_page_table(settings->value("depth", DEF_PT_DEPTH).toUInt());
 			settings->endGroup();
 			break;
 		default:
@@ -356,6 +399,12 @@ void MemSimulation::remove_device(QString & name)
 			break;
 		case SWAP:
 			devs.delete_swap(NULL);
+			break;
+		case TLB:
+			devs.delete_tlb(NULL);
+			break;
+		case PT :
+			devs.delete_page_table(NULL);
 			break;
 		default:
 			throw ConfigErrorWrongDevice();

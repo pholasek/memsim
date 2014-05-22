@@ -97,6 +97,10 @@ class MemSimulation
 		void process_ram(QStringList & groups);
 		//! Set swap in model according to existing settings.
 		void process_swap(QStringList & groups);
+		//! Set tlb in model according to existing settings.
+		void process_tlb(QStringList & groups);
+		//! Set page table in model according to existing settings.
+		void process_pg_table(QStringList & groups);
 		//! Set devices in model according to existing settings.
 		void process_devices(QStringList & groups);
 		//! Set other attributes of simulator to existing settings.

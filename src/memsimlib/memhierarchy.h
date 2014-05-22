@@ -17,7 +17,7 @@
 #include "memexcept.h"
 
 //! Max number of possible devices in simulation model.
-const int dev_num = 6;
+const int dev_num = 8;
 //! Max number of possible caches in simulation model.
 const int cache_num = 3;
 
@@ -27,6 +27,11 @@ const quint64 DEF_CACHE_LSIZE = 512;
 const quint64 DEF_CACHE_ASSOC = 2;
 const quint64 DEF_RAM_LATENCY = 1;
 const quint64 DEF_SWAP_LATENCY = 1;
+const quint64 DEF_TLB_LATENCY = 1;
+const quint64 DEF_TLB_ENTRY_SIZE = sizeof(unsigned long int);
+const quint64 DEF_TLB_ENTRIES = 150;
+const quint64 DEF_PT_DEPTH = 4;
+const quint64 DEF_PAGE_SIZE = 4096;
 
 //! This class providing access to simulation model of memory hierarchy.
 class MemHierarchy
@@ -72,6 +77,28 @@ class MemHierarchy
 		 * \param[in] new_swap New swap replacing the current one or NULL.
 		 */
 		void delete_swap(MemDeviceSwap *new_swap);
+		//! Adds new tlb device to model.
+		/*!
+		 * \param[in] entries Number of TLB entries
+		 * \param[in] entrysize Size of TLB entry
+		 * \param[in] latency Latency of the TLB device.
+		 */
+		void add_tlb(long entries, long entrysize, int latency);
+		//! Removes tlb from model.
+		/*
+		 * \param[in] new_tlb New tlb replacing the current one or NULL.
+		 */
+		void delete_tlb(MemDeviceTlb *new_tlb);
+		//! Adds new page table to model.
+		/*!
+		 * \param[in] depth Depth of the page table.
+		 */
+		void add_page_table(long depth);
+		//! Removes page_table from model.
+		/*
+		 * \param[in] new_ New tlb replacing the current one or NULL.
+		 */
+		void delete_page_table(MemPageTable *new_pg_table);
 		//! Configures the cache option.
 		/*!
 		 * \param[in] type Type of the cache.
@@ -91,6 +118,18 @@ class MemHierarchy
 		 * \param[in] value New value of the parameter.
 		 */
 		void config_swap(QString & param, long value);
+		//! Configures the tlb option.
+		/*!
+		 * \param[in] param Parameter of the swap.
+		 * \param[in] value New value of the parameter.
+		 */
+		void config_tlb(QString & param, long value);
+		//! Configures the page_table option.
+		/*!
+		 * \param[in] param Parameter of the swap.
+		 * \param[in] value New value of the parameter.
+		 */
+		void config_page_table(QString & param, long value);
 		//! Checks simulation model integrity.
 		void commit_changes(void);
 		//! Set device used for simulation.
@@ -123,6 +162,10 @@ class MemHierarchy
 		MemDevice * get_first_data() { return first_data; }
 		//! Returns current device used for memory access in model.
 		MemDevice * get_sim_dev() { return sim_dev; }
+		//! Returns pointer to tlb device.
+		MemDevice * get_tlb() { return tlb; }
+		//! Returns presence of tlb in hierarchy
+		bool has_tlb() { return tlb ? true : false; }
 	private:
 		//! Current simulation device in model.
 		MemDevice *sim_dev;
@@ -142,6 +185,10 @@ class MemHierarchy
 		MemDeviceRAM * ram;
 		//! Swap cache pointer.
 		MemDeviceSwap * swap;
+		//! TLB cache pointer.
+		MemDeviceTlb * tlb;
+		//! Page table object pointer.
+		MemPageTable * pg_table;
 		//! Clear content of all caches in model.
 		void clean_caches();
 		//! Checks integrity of the model.
@@ -152,12 +199,20 @@ class MemHierarchy
 		QString show_ram();
 		//! Shows attributes of swap.
 		QString show_swap();
+		//! Shows attributes of tlb.
+		QString show_tlb();
+		//! Shows attributes of page_table.
+		QString show_page_table();
 		//! Shows statistics of give cache.
 		QString show_cache_stats(mem_t type);
 		//! Shows statistics of ram memory.
 		QString show_ram_stats();
 		//! Shows statistics of swap memory.
 		QString show_swap_stats();
+		//! Shows statistics of tlb memory.
+		QString show_tlb_stats();
+		//! Shows statistics of pg_table.
+		QString show_page_table_stats();
 		//! An array containing info about presence of devices in current simulation model
 		static bool dev_map[dev_num];
 		//! A mapping between name and type.

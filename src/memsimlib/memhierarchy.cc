@@ -11,7 +11,7 @@
 #include "memhierarchy.h"
 
 //! Constructor && destructor
-MemHierarchy::MemHierarchy() :  sim_dev(NULL), first_inst(NULL), first_data(NULL), last_dev(NULL), l1_i(NULL), l1_d(NULL), l2(NULL), l3(NULL), ram(NULL), swap(NULL)
+MemHierarchy::MemHierarchy() :  sim_dev(NULL), first_inst(NULL), first_data(NULL), last_dev(NULL), l1_i(NULL), l1_d(NULL), l2(NULL), l3(NULL), ram(NULL), swap(NULL), tlb(NULL)
 {
 	name2type.insert("l1_i", L1_I);
 	name2type.insert("l1_d", L1_D);
@@ -20,6 +20,7 @@ MemHierarchy::MemHierarchy() :  sim_dev(NULL), first_inst(NULL), first_data(NULL
 	name2type.insert("l3", L3);
 	name2type.insert("ram", RAM);
 	name2type.insert("swap", SWAP);
+	name2type.insert("tlb", TLB);
 	type2name.insert(L1_I, "l1_i");
 	type2name.insert(L1_D, "l1_d");
 	type2name.insert(L1_D, "l1");
@@ -27,6 +28,7 @@ MemHierarchy::MemHierarchy() :  sim_dev(NULL), first_inst(NULL), first_data(NULL
 	type2name.insert(L3, "l3");
 	type2name.insert(RAM, "ram");
 	type2name.insert(SWAP, "swap");
+	type2name.insert(TLB, "tlb");
 }
 
 MemHierarchy::~MemHierarchy()
@@ -43,6 +45,8 @@ MemHierarchy::~MemHierarchy()
 		delete ram;
 	if (!dev_map[SWAP])
 		delete swap;
+	if (!dev_map[TLB])
+		delete tlb;
 }
 
 bool MemHierarchy::dev_map[dev_num] = {false, };
@@ -71,7 +75,7 @@ void MemHierarchy::check_integrity()
 	first_data = NULL;
 	last_dev = NULL;
 
-	for (int i = 0; i < dev_num; i++) {
+	for (int i = 0; i < (mem_t) GENERIC; i++) {
 		MemDevice *p = assign_p((mem_t) i);
 
 		if (p && i == L1_D)
@@ -119,6 +123,9 @@ inline MemDevice * MemHierarchy::assign_p(mem_t type)
 		case SWAP:
 			return swap;
 			break;
+		case TLB:
+			return tlb;
+			break;
 		default:
 			return NULL;
 	}
@@ -134,7 +141,7 @@ int MemHierarchy::next_dev(void)
 		return ret;
 
 	mem_t type = sim_dev->get_type(); //! Getting type of the current device
-	if (type >= dev_num)
+	if ((mem_t) type >= SWAP)
 		return ret;
 
 	if (type == L1_D)
@@ -142,7 +149,7 @@ int MemHierarchy::next_dev(void)
 	else
 		i = type + 1;;
 
-	while (i < dev_num) {
+	while ((mem_t) i < GENERIC) {
 		if (dev_map[i] == true) {
 			next = assign_p((mem_t) i);
 			break;
@@ -294,6 +301,56 @@ void MemHierarchy::add_swap(int latency)
 	dev_map[SWAP] = true;
 }
 
+void MemHierarchy::add_tlb(long entries, long entrysize, int latency)
+{
+	MemDeviceTlb * new_tlb;
+
+	try {
+		new_tlb = new MemDeviceTlb(entries, entrysize, latency);
+	} catch (std::bad_alloc & ex) {
+		throw MemErrorAlloc();
+	}
+
+	delete_tlb(new_tlb);
+	dev_map[TLB] = true;
+}
+
+void MemHierarchy::delete_tlb(MemDeviceTlb *new_tlb)
+{
+	if (tlb)
+		delete tlb;
+
+	tlb = new_tlb;
+
+	if (!new_tlb)
+		dev_map[TLB] = false;
+}
+
+void MemHierarchy::add_page_table(long depth)
+{
+	MemPageTable * new_pg_table;
+
+	try {
+		new_pg_table = new MemPageTable(depth);
+	} catch (std::bad_alloc & ex) {
+		throw MemErrorAlloc();
+	}
+
+	delete_page_table(new_pg_table);
+	dev_map[PT] = true;
+}
+
+void MemHierarchy::delete_page_table(MemPageTable *new_pg_table)
+{
+	if (pg_table)
+		delete pg_table;
+
+	pg_table = new_pg_table;
+
+	if (!new_pg_table)
+		dev_map[PT] = false;
+}
+
 void MemHierarchy::config_cache(mem_t type, QString & param, long value)
 {
 	MemDeviceCache *cache = (MemDeviceCache *) assign_p(type);
@@ -320,6 +377,20 @@ void MemHierarchy::config_swap(QString & param, long value)
 {
 	if (param == "latency")
 		swap->set_latency(value);
+}
+
+void MemHierarchy::config_tlb(QString & param, long value)
+{
+	if (param == "latency")
+		tlb->set_latency(value);
+	else if (param == "entries")
+		tlb->set_entries(value);
+	else
+		config_cache(TLB, param, value);
+}
+
+void MemHierarchy::config_page_table(QString & param, long value)
+{
 }
 
 QString MemHierarchy::show_cache_stats(mem_t type)
@@ -379,6 +450,16 @@ QString MemHierarchy::show_swap_stats()
 			.arg(stats.get_miss());
 }
 
+QString MemHierarchy::show_tlb_stats()
+{
+	return show_cache_stats(TLB);
+}
+
+QString MemHierarchy::show_page_table_stats()
+{
+	return QString("PT stats");
+}
+
 QString MemHierarchy::show_stats()
 {
 	QString out;
@@ -396,6 +477,12 @@ QString MemHierarchy::show_stats()
 				break;
 			case SWAP:
 				out += show_swap_stats();
+				break;
+			case TLB:
+				out += show_tlb_stats();
+				break;
+			case PT:
+				out += show_page_table_stats();
 				break;
 			default:
 				break;
@@ -429,7 +516,7 @@ QString MemHierarchy::show_ram()
 	if (!ptr)
 		return QString();
 
-	return QString ("ram:\n\tlatency:%2\n")
+	return QString ("ram:\n\tlatency:%1\n")
 			.arg(ptr->get_latency());
 }
 
@@ -440,9 +527,27 @@ QString MemHierarchy::show_swap()
 	if (!ptr)
 		return QString();
 
-	return QString("swap:\n\tlatency:%2\n")
+	return QString("swap:\n\tlatency:%1\n")
 			.arg(ptr->get_latency());
 }
+
+QString MemHierarchy::show_tlb()
+{
+	MemDeviceTlb *ptr = tlb;
+
+	if (!ptr)
+		return QString();
+
+	return QString("tlb:\n\tlatency:%1\n\tmax_entries:%2")
+			.arg(ptr->get_latency())
+			.arg(ptr->get_entries());
+}
+
+QString MemHierarchy::show_page_table()
+{
+	return QString("PT attrs");
+}
+
 
 QString MemHierarchy::show_devs()
 {
@@ -461,6 +566,12 @@ QString MemHierarchy::show_devs()
 				break;
 			case SWAP:
 				out += show_swap();
+				break;
+			case TLB:
+				out += show_tlb();
+				break;
+			case PT:
+				out += show_page_table();
 				break;
 			default:
 				break;

@@ -39,6 +39,8 @@ enum mem_t {
 	L3, /*< L3 cache */
 	RAM, /*< RAM */
 	SWAP, /*< Swap device */
+	TLB, /*< TLB */
+	PT, /*< Page table */
 	GENERIC /*< Other (generic) device */
 };
 
@@ -235,7 +237,7 @@ class MemDeviceCache : public MemDevice
 		//! A constructor.
                 MemDeviceCache();
 		//! A destructor.
-                ~MemDeviceCache();
+                virtual ~MemDeviceCache();
 		//! A default constructor.
                 MemDeviceCache(mem_t type, int lat, long size, long lsize, long assoc);
 		//! Sets size of cache.
@@ -268,7 +270,7 @@ class MemDeviceCache : public MemDevice
 		 */
                 int do_mem_ref(quint64 addr, quint64 size);
 		friend MemHierarchy;
-        private:
+        protected:
 		//! Replacement policy used in cache.
                 policy_t pol;
 		//! Size of cache in bytes
@@ -335,6 +337,44 @@ class MemDeviceSwap : public MemDevice
 	private:
 		//! RAM statistics
                 MemDeviceSwapStats stats;
+};
+
+//! Class implementating TLB
+class MemDeviceTlb : public MemDeviceCache
+{
+	public:
+		//!A constructor.
+		MemDeviceTlb() : MemDeviceCache() {}
+		//!An extended constructor
+		MemDeviceTlb(long entries, long entrysize, long lat) : MemDeviceCache(TLB, lat, entries * entrysize * 4, entrysize, 4), entries(entries), entrysize(entrysize)  {}
+		//!A destructor
+		~MemDeviceTlb() {}
+		void set_entries(long entries);
+		long get_entries() { return entries; }
+		void set_entrysize(long entrysize);
+		long get_entrysize() { return entrysize; }
+	private:
+		//! Number of TLB entries
+		long entries;
+		//! Widht of TLB entry
+		long entrysize;
+};
+
+//! Class implementating page table
+class MemPageTable {
+	public:
+		//! A constructor
+		MemPageTable(long depth) : depth(depth) {}
+		//! A destructor
+		~MemPageTable() {}
+		//! Page address translation
+		/*!
+		 * \param[in] addr Virtual address for translating
+		 * \return Return HIT or MISS
+		 */
+		int transl_addr(quint64 addr, quint64 size);
+	private:
+		long depth;
 };
 
 //! Class implementating CPU

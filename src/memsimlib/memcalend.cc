@@ -36,7 +36,6 @@ int MemSimCalend::do_next(void)
 	MemSimCalendEvent & first = get_first();
 	Time = first.get_time();
 	ret = first.do_event();
-	//qDebug() << "ret" << ret;
 
 	ev_proc++;
 

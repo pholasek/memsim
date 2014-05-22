@@ -183,7 +183,19 @@ miss_treatment:
 /*--- end                                                 cg_sim.c ---*/
 /*--------------------------------------------------------------------*/
 
+void MemDeviceTlb::set_entries(long entries)
+{
+	this->entries = entries;
+	this->size = entries * entrysize * 4;
+	refresh_cache();
+}
 
+void MemDeviceTlb::set_entrysize(long entrysize)
+{
+	this->entrysize = entrysize;
+	this->size = entries * entrysize * 4;
+	refresh_cache();
+}
 
 void MemDeviceCacheStats::reset_stats()
 {
@@ -276,3 +288,11 @@ void MemDeviceCpu::state_watchdog(quint64 curr_t)
 	*/
 }
 
+/*
+ * MemPageTable
+ */
+
+int MemPageTable::transl_addr(quint64 addr, quint64 size)
+{
+	return qrand() % 2 ? HIT : FAULT;
+}
