@@ -31,6 +31,7 @@ const quint64 DEF_TLB_LATENCY = 1;
 const quint64 DEF_TLB_ENTRY_SIZE = sizeof(unsigned long int);
 const quint64 DEF_TLB_ENTRIES = 150;
 const quint64 DEF_PT_DEPTH = 4;
+const quint64 DEF_PT_LATENCY = 4;
 const quint64 DEF_PAGE_SIZE = 4096;
 
 //! This class providing access to simulation model of memory hierarchy.
@@ -164,6 +165,8 @@ class MemHierarchy
 		MemDevice * get_sim_dev() { return sim_dev; }
 		//! Returns pointer to tlb device.
 		MemDevice * get_tlb() { return tlb; }
+		//! Returns pointer to page table.
+		MemDevice * get_pg_table() { return pg_table; }
 		//! Returns presence of tlb in hierarchy
 		bool has_tlb() { return tlb ? true : false; }
 	private:

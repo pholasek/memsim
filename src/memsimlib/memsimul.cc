@@ -228,10 +228,29 @@ void MemSimulation::reset_memsim()
 {
 }
 
-/*void MemSimulation::search_vm(const MemTraceEntry & e)
+mem_t MemSimulation::search_vm(const MemTraceEntry & e)
 {
+	int ret;
+
+	/* Search in TLB */
 	cal.new_ref_event(devs.get_tlb(), RREF, e.address, e.size, devs.get_tlb()->get_latency(), 0);
-}*/
+	ret = cal.do_next();
+	if (ret == HIT)
+		return TLB;
+	else if (ret == FAULT)
+		cal.new_; // transl.udalost pro vm
+
+	/* Search in page table*/
+	int = cal.do_next();
+	if (ret == HIT)
+		return PT;
+	else if (ret == FAULT)
+		cal.new_ // swap reference
+
+	ret = cal.do_next();
+
+	return SWAP;
+}
 
 /*
  * Returns starting device (D/I) for simulation
@@ -266,6 +285,7 @@ MemDevice * MemSimulation::process_inst(const MemTraceEntry & e)
 void MemSimulation::sim_trace(MemTrace & trace)
 {
 	int ret = HIT, end = 0;
+	mem_t found;
 
 	devs.commit_changes();
 
@@ -275,6 +295,7 @@ void MemSimulation::sim_trace(MemTrace & trace)
 	do {
 		const MemTraceEntry & e = trace.get_next(&end); //! Get next line from trace
 
+		found = search_vm(e);
 		devs.set_sim_dev(process_inst(e)); //! Process the line
 		while (!devs.on_last_dev()) { //! Search for address in ascendant order
 			ret = cal.do_next(); //! Do next action scheduled in calendar

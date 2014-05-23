@@ -361,10 +361,10 @@ class MemDeviceTlb : public MemDeviceCache
 };
 
 //! Class implementating page table
-class MemPageTable {
+class MemPageTable : public MemDevice {
 	public:
 		//! A constructor
-		MemPageTable(long depth) : depth(depth) {}
+		MemPageTable(long depth, int latency) : MemDevice(PT, latency), depth(depth) {}
 		//! A destructor
 		~MemPageTable() {}
 		//! Page address translation
@@ -372,7 +372,7 @@ class MemPageTable {
 		 * \param[in] addr Virtual address for translating
 		 * \return Return HIT or MISS
 		 */
-		int transl_addr(quint64 addr, quint64 size);
+		int do_mem_ref(quint64 addr);
 	private:
 		long depth;
 };

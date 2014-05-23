@@ -326,12 +326,12 @@ void MemHierarchy::delete_tlb(MemDeviceTlb *new_tlb)
 		dev_map[TLB] = false;
 }
 
-void MemHierarchy::add_page_table(long depth)
+void MemHierarchy::add_page_table(long depth, int latency)
 {
 	MemPageTable * new_pg_table;
 
 	try {
-		new_pg_table = new MemPageTable(depth);
+		new_pg_table = new MemPageTable(depth, latency);
 	} catch (std::bad_alloc & ex) {
 		throw MemErrorAlloc();
 	}

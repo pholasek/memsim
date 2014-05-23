@@ -26,8 +26,10 @@ int MemSimCalend::do_next(void)
 {
 	int ret;
 
-	if (events.isEmpty())
+	if (events.isEmpty()) {
+		qDebug() << "MemSimCalend calendar is empty O_o.";
 		return -1;
+	}
 
 	if (ev_proc > 0) {
 		events.erase(events.begin()); // removes processed event which was the first in calendar
