@@ -85,6 +85,8 @@ class MemSimulation
 		 * \return MemDevice where will be the access scheduled.
 		 */
 		MemDevice * process_inst(const MemTraceEntry & e);
+		//! Part of simulation of VM model
+		mem_t search_vm(const MemTraceEntry & e);
 		//! Init devices in model.
 		void init_devices();
 		//! Set caches in model according to existing settings.

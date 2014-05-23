@@ -47,6 +47,8 @@ MemHierarchy::~MemHierarchy()
 		delete swap;
 	if (!dev_map[TLB])
 		delete tlb;
+	if (!dev_map[PT])
+		delete pg_table;
 }
 
 bool MemHierarchy::dev_map[dev_num] = {false, };

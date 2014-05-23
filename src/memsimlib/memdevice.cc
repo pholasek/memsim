@@ -292,7 +292,7 @@ void MemDeviceCpu::state_watchdog(quint64 curr_t)
  * MemPageTable
  */
 
-int MemPageTable::transl_addr(quint64 addr, quint64 size)
+int MemPageTable::do_mem_ref(quint64 addr, quint64 size)
 {
 	return qrand() % 2 ? HIT : FAULT;
 }

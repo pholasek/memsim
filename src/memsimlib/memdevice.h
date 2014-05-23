@@ -147,6 +147,17 @@ class MemDeviceSwapStats : public MemDeviceCacheStats
 		~MemDeviceSwapStats() {}
         private:
 };
+//
+//! Class containing page table stats
+class MemPageTableStats : public MemDeviceCacheStats
+{
+	public:
+		//! A constructor.
+                MemPageTableStats() : MemDeviceCacheStats() {};
+		//! A destructor.
+		~MemPageTableStats() {}
+        private:
+};
 
 //! Abstract model class of memory device
 class MemDevice
@@ -372,9 +383,11 @@ class MemPageTable : public MemDevice {
 		 * \param[in] addr Virtual address for translating
 		 * \return Return HIT or MISS
 		 */
-		int do_mem_ref(quint64 addr);
+		int do_mem_ref(quint64 addr, quint64 size);
+		MemPageTableStats & get_stats(void) { return stats; }
 	private:
 		long depth;
+		MemPageTableStats stats;
 };
 
 //! Class implementating CPU

@@ -230,24 +230,26 @@ void MemSimulation::reset_memsim()
 
 mem_t MemSimulation::search_vm(const MemTraceEntry & e)
 {
-	int ret;
+	int ret = FAULT;
 
 	/* Search in TLB */
-	cal.new_ref_event(devs.get_tlb(), RREF, e.address, e.size, devs.get_tlb()->get_latency(), 0);
-	ret = cal.do_next();
+	if (devs.has_tlb()) {
+		cal.new_ref_event(devs.get_tlb(), RREF, e.address, e.size, devs.get_tlb()->get_latency(), 0);
+		ret = cal.do_next();
+	}
 	if (ret == HIT)
 		return TLB;
-	else if (ret == FAULT)
-		cal.new_; // transl.udalost pro vm
-
-	/* Search in page table*/
-	int = cal.do_next();
+	else if (ret == FAULT && devs.has_pg_table()) { /* We need to translate address in page table */
+		cal.new_ref_event(devs.get_pg_table(), RREF, e.address, e.size, devs.get_pg_table()->get_latency(), 0);
+		/* Search in page table*/
+		ret = cal.do_next();
+	}
 	if (ret == HIT)
 		return PT;
-	else if (ret == FAULT)
-		cal.new_ // swap reference
-
-	ret = cal.do_next();
+	else if (ret == FAULT && devs.has_swap()) { /* We need to fetch data from swap. Swap is mandatory here. */
+		cal.new_ref_event(devs.get_swap(), RREF, e.address, e.size, devs.get_swap()->get_latency(), 0);
+		ret = cal.do_next();
+	}
 
 	return SWAP;
 }
@@ -295,7 +297,7 @@ void MemSimulation::sim_trace(MemTrace & trace)
 	do {
 		const MemTraceEntry & e = trace.get_next(&end); //! Get next line from trace
 
-		found = search_vm(e);
+		found = search_vm(e); //! Address translation
 		devs.set_sim_dev(process_inst(e)); //! Process the line
 		while (!devs.on_last_dev()) { //! Search for address in ascendant order
 			ret = cal.do_next(); //! Do next action scheduled in calendar
@@ -390,7 +392,8 @@ void MemSimulation::add_device(QString & name)
 			break;
 		case PT:
 			settings->beginGroup("pt");
-			devs.add_page_table(settings->value("depth", DEF_PT_DEPTH).toUInt());
+			devs.add_page_table(settings->value("depth", DEF_PT_DEPTH).toUInt(),
+					settings->value("latency", DEF_PT_LATENCY).toUInt());
 			settings->endGroup();
 			break;
 		default:

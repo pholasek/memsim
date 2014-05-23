@@ -94,7 +94,7 @@ class MemHierarchy
 		/*!
 		 * \param[in] depth Depth of the page table.
 		 */
-		void add_page_table(long depth);
+		void add_page_table(long depth, int latency);
 		//! Removes page_table from model.
 		/*
 		 * \param[in] new_ New tlb replacing the current one or NULL.
@@ -167,8 +167,14 @@ class MemHierarchy
 		MemDevice * get_tlb() { return tlb; }
 		//! Returns pointer to page table.
 		MemDevice * get_pg_table() { return pg_table; }
+		//! Returns pointer to swap.
+		MemDevice * get_swap() { return swap; }
 		//! Returns presence of tlb in hierarchy
-		bool has_tlb() { return tlb ? true : false; }
+		bool has_tlb() { return dev_map[TLB]; }
+		//! Returns presence of pg_table in hierarchy
+		bool has_pg_table() { return dev_map[PT]; }
+		//! Returns presence of swap in hierarchy
+		bool has_swap() { return dev_map[SWAP]; }
 	private:
 		//! Current simulation device in model.
 		MemDevice *sim_dev;
