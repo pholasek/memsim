@@ -132,7 +132,7 @@ void MemSimulation::process_tlb(QStringList & groups)
 	long entries, entrysize;
 	bool active;
 
-	if (!(groups.filter("tlb").isEmpty())) {
+	if (!(groups.filter("tlb").isEmpty()) && devs.has_pg_table()) {
 		settings->beginGroup("tlb");
 		latency = settings->value("latency", DEF_TLB_LATENCY).toInt();
 		entries = settings->value("entries", DEF_TLB_ENTRIES).toULongLong();
@@ -142,7 +142,7 @@ void MemSimulation::process_tlb(QStringList & groups)
 
 		if (active)
 			devs.add_tlb(entries, entrysize, latency);
-		groups.removeAt(groups.indexOf("ram"));
+		groups.removeAt(groups.indexOf("tlb"));
 	}
 }
 
@@ -154,7 +154,7 @@ void MemSimulation::process_ram(QStringList & groups)
 
 	if (!(groups.filter("ram").isEmpty())) {
 		settings->beginGroup("ram");
-		latency = settings->value("latency", 1).toInt();
+		latency = settings->value("latency", DEF_RAM_LATENCY).toInt();
 		active = settings->value("active", false).toBool();
 		settings->endGroup();
 
@@ -170,15 +170,34 @@ void MemSimulation::process_swap(QStringList & groups)
 	int latency;
 	bool active;
 
-	if (!(groups.filter("swap").isEmpty())) {
+	if (!(groups.filter("swap").isEmpty()) && devs.has_pg_table()) {
 		settings->beginGroup("swap");
-		latency = settings->value("latency", 1).toInt();
+		latency = settings->value("latency", DEF_SWAP_LATENCY).toInt();
 		active = settings->value("active", false).toBool();
 		settings->endGroup();
 
 		if (active)
 			devs.add_swap(latency);
 		groups.removeAt(groups.indexOf("swap"));
+	}
+}
+
+void MemSimulation::process_pg_table(QStringList & groups)
+{
+	int latency;
+	long depth;
+	bool active;
+
+	if (!(groups.filter("pt").isEmpty())) {
+		settings->beginGroup("pt");
+		latency = settings->value("latency", DEF_PT_LATENCY).toInt();
+		depth = settings->value("depth", DEF_PT_DEPTH).toULongLong();
+		active = settings->value("active", false).toBool();
+		settings->endGroup();
+
+		if (active)
+			devs.add_page_table(depth, latency);
+		groups.removeAt(groups.indexOf("pt"));
 	}
 }
 
@@ -194,7 +213,10 @@ void MemSimulation::process_devices(QStringList & groups)
 	process_cache(groups, QString("l2"));
 	process_cache(groups, QString("l3"));
 	process_ram(groups);
+	process_pg_table(groups);
 	process_swap(groups);
+	process_tlb(groups);
+	settings->sync();
 	//devs.commit_changes();
 }
 
@@ -297,7 +319,8 @@ void MemSimulation::sim_trace(MemTrace & trace)
 	do {
 		const MemTraceEntry & e = trace.get_next(&end); //! Get next line from trace
 
-		found = search_vm(e); //! Address translation
+		if (devs.has_pg_table()) //! If VM is turned on - address translation
+			found = search_vm(e);
 		devs.set_sim_dev(process_inst(e)); //! Process the line
 		while (!devs.on_last_dev()) { //! Search for address in ascendant order
 			ret = cal.do_next(); //! Do next action scheduled in calendar
@@ -379,11 +402,15 @@ void MemSimulation::add_device(QString & name)
 			settings->endGroup();
 			break;
 		case SWAP:
+			if (!devs.has_pg_table())
+				throw ConfigErrorNoPageTable();
 			settings->beginGroup("swap");
 			devs.add_swap(settings->value("latency", DEF_SWAP_LATENCY).toUInt());
 			settings->endGroup();
 			break;
 		case TLB:
+			if (!devs.has_pg_table())
+				throw ConfigErrorNoPageTable();
 			settings->beginGroup("tlb");
 			devs.add_tlb(settings->value("entries", DEF_TLB_ENTRIES).toUInt(),
 					settings->value("entrysize", DEF_TLB_ENTRY_SIZE).toUInt(),
@@ -401,10 +428,7 @@ void MemSimulation::add_device(QString & name)
 			break;
 	}
 
-	settings->beginGroup(name);
-	settings->setValue("active", true);
-	settings->endGroup();
-	settings->sync();
+	enable_device(name);
 }
 
 void MemSimulation::remove_device(QString & name)
@@ -424,17 +448,34 @@ void MemSimulation::remove_device(QString & name)
 		case SWAP:
 			devs.delete_swap(NULL);
 			break;
+		case PT :
+			devs.delete_page_table(NULL); /* Also deactivate TLB and swap */
+			devs.delete_tlb(NULL);
+			devs.delete_swap(NULL);
+			{ QString tlb("tlb"); disable_device(tlb); }
+			{ QString swap("swap"); disable_device(swap); }
+			break;
 		case TLB:
 			devs.delete_tlb(NULL);
-			break;
-		case PT :
-			devs.delete_page_table(NULL);
 			break;
 		default:
 			throw ConfigErrorWrongDevice();
 			break;
 	}
 
+	disable_device(name);
+}
+
+void MemSimulation::enable_device(QString & name)
+{
+	settings->beginGroup(name);
+	settings->setValue("active", true);
+	settings->endGroup();
+	settings->sync();
+}
+
+void MemSimulation::disable_device(QString & name)
+{
 	settings->beginGroup(name);
 	settings->setValue("active", false);
 	settings->endGroup();

@@ -26,7 +26,7 @@ MemDevice::MemDevice(mem_t type = GENERIC, int latency = 1)
 
 MemDeviceCache::MemDeviceCache() : MemDevice(L1_D, 1) {}
 
-MemDeviceCache::MemDeviceCache(mem_t type, int lat, long size, long lsize, long assoc) :
+MemDeviceCache::MemDeviceCache(mem_t type, int lat, quint64 size, long lsize, long assoc) :
         MemDevice(type, lat), tags(NULL)
 {
         this->size = size;
@@ -38,7 +38,7 @@ MemDeviceCache::MemDeviceCache(mem_t type, int lat, long size, long lsize, long 
         line_size_bits = log2(lsize);
         tag_shift = line_size_bits + log2(sets);
 
-	tags = new unsigned long int[sets * assoc];
+	tags = new quint64[sets * assoc]; //! Guarantee of 64-bit space
 	memset(tags, 0, sets * assoc);
 }
 
@@ -56,11 +56,11 @@ void MemDeviceCache::refresh_cache()
 
 	if (!tags)
 		delete tags;
-	tags = new unsigned long int[sets * assoc];
+	tags = new quint64[sets * assoc];
 	memset(tags, 0, sets * assoc);
 }
 
-void MemDeviceCache::set_size(long size)
+void MemDeviceCache::set_size(quint64 size)
 {
 	size = size;
 	refresh_cache();
@@ -91,7 +91,7 @@ int MemDeviceCache::do_mem_ref(quint64 addr, quint64 size)
    unsigned long int tag2;
    int i, j;
    bool is_miss = false;
-   unsigned long int* set;
+   quint64* set;
 
    stats.inc_ac();
 
@@ -118,7 +118,7 @@ int MemDeviceCache::do_mem_ref(quint64 addr, quint64 size)
          }
       }
 
-      /* A miss;  install this tag as MRU, shuffle rest down. */
+      /* A miss;  install this tag as MRU, shuffle rest down. */ //FIXME
       for (j = assoc - 1; j > 0; j--) {
          set[j] = set[j - 1];
       }
@@ -133,8 +133,8 @@ int MemDeviceCache::do_mem_ref(quint64 addr, quint64 size)
       if (tag == set[0]) {
          goto block2;
       }
-      for (i = 1; i < assoc; i++) {
-         if (tag == set[i]) {
+      for (i = 1; i < assoc; i++) { //FIXME
+         if (tag == set[i]) { /*HIT*/
             for (j = i; j > 0; j--) {
                set[j] = set[j - 1];
             }
@@ -153,8 +153,8 @@ block2:
       if (tag2 == set[0]) {
          goto miss_treatment;
       }
-      for (i = 1; i < assoc; i++) {
-         if (tag2 == set[i]) {
+      for (i = 1; i < assoc; i++) { //FIXME
+         if (tag2 == set[i]) { /*HIT*/
             for (j = i; j > 0; j--) {
                set[j] = set[j - 1];
             }
@@ -207,6 +207,7 @@ long MemDeviceCacheStats::get_ac() { return ac; }
 long MemDeviceCacheStats::get_miss() { return miss; }
 void MemDeviceCacheStats::inc_ac() { ac++; }
 void MemDeviceCacheStats::inc_miss() { miss++; }
+void MemDeviceCacheStats::inc_opts() { opts++; }
 
 
 /*
@@ -294,5 +295,7 @@ void MemDeviceCpu::state_watchdog(quint64 curr_t)
 
 int MemPageTable::do_mem_ref(quint64 addr, quint64 size)
 {
+	stats.inc_opts();
+
 	return qrand() % 2 ? HIT : FAULT;
 }

@@ -65,6 +65,8 @@ class MemDeviceStats
                 virtual void inc_ac() = 0;
 		//! Pure virtual member.
                 virtual void inc_miss() = 0;
+		//! Pure virtual member.
+                virtual void inc_opts() = 0;
 	protected:
 		//! A protected constructor.
 		MemDeviceStats() : opts(0) {};
@@ -91,6 +93,8 @@ class MemDeviceCacheStats : public MemDeviceStats
                 void inc_ac();
 		//! Increments number of cache misses.
                 void inc_miss();
+		//! Increments number of operations.
+                void inc_opts();
         private:
 		//! Cache acesses.
                 long ac;
@@ -250,9 +254,9 @@ class MemDeviceCache : public MemDevice
 		//! A destructor.
                 virtual ~MemDeviceCache();
 		//! A default constructor.
-                MemDeviceCache(mem_t type, int lat, long size, long lsize, long assoc);
+                MemDeviceCache(mem_t type, int lat, quint64 size, long lsize, long assoc);
 		//! Sets size of cache.
-                void set_size(long size);
+                void set_size(quint64 size);
 		//! Sets line size of cache.
                 void set_lsize(long lsize);
 		//! Sets associativity of cache.
@@ -260,7 +264,7 @@ class MemDeviceCache : public MemDevice
 		//! Sets used policy of cache.
                 void set_policy(policy_t policy);
 		//! Returns size of cache.
-		long get_size() {return size;}
+		quint64 get_size() {return size;}
 		//! Returns line size of cache.
 		long get_lsize() {return lsize;}
 		//! Returns associativy of the cache.
@@ -285,7 +289,7 @@ class MemDeviceCache : public MemDevice
 		//! Replacement policy used in cache.
                 policy_t pol;
 		//! Size of cache in bytes
-                long size;
+                quint64 size;
 		//! Size of cache line
                 long lsize;
 		//! Associativy of the cache, i.e. how many n-way is cache
@@ -299,7 +303,7 @@ class MemDeviceCache : public MemDevice
 		//! Bitmask helper
                 long tag_shift;
 		//! Data in cache.
-                unsigned long int *tags;
+                quint64 *tags;
 		//! Cache statistics.
                 MemDeviceCacheStats stats;
 };
@@ -385,6 +389,7 @@ class MemPageTable : public MemDevice {
 		 */
 		int do_mem_ref(quint64 addr, quint64 size);
 		MemPageTableStats & get_stats(void) { return stats; }
+		long get_depth(void) { return depth; }
 	private:
 		long depth;
 		MemPageTableStats stats;

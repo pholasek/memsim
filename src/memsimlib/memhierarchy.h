@@ -21,10 +21,10 @@ const int dev_num = 8;
 //! Max number of possible caches in simulation model.
 const int cache_num = 3;
 
-const quint64 DEF_CACHE_LATENCY = 1;
-const quint64 DEF_CACHE_SIZE = 65535;
-const quint64 DEF_CACHE_LSIZE = 512;
-const quint64 DEF_CACHE_ASSOC = 2;
+const quint64 DEF_CACHE_LATENCY = 11;
+const quint64 DEF_CACHE_SIZE = 32768;
+const quint64 DEF_CACHE_LSIZE = 8;
+const quint64 DEF_CACHE_ASSOC = 8;
 const quint64 DEF_RAM_LATENCY = 1;
 const quint64 DEF_SWAP_LATENCY = 1;
 const quint64 DEF_TLB_LATENCY = 1;

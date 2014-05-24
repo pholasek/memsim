@@ -38,7 +38,7 @@ class MemErrorAlloc : public MemError {};
 
 class ConfigError : public std::runtime_error {
 	public:
-		ConfigError() : std::runtime_error("Configuration file error:") {}
+		ConfigError() : std::runtime_error("Configuration error:") {}
 };
 
 class ConfigErrorFileAccess : public ConfigError {};
@@ -46,5 +46,7 @@ class ConfigErrorFileAccess : public ConfigError {};
 class ConfigErrorWrongDevice : public ConfigError {};
 
 class ConfigErrorEmptyHierarchy : public ConfigError {};
+
+class ConfigErrorNoPageTable : public ConfigError {};
 
 #endif

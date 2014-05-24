@@ -10,7 +10,7 @@
 
 #include "memcalend.h"
 
-static bool event_time_cmp(const MemSimCalendEvent & e1, const MemSimCalendEvent & e2)
+static inline bool event_time_cmp(const MemSimCalendEvent & e1, const MemSimCalendEvent & e2)
 {
 	if (e1.get_time() != e2.get_time())
 		return e1.get_time() < e2.get_time();
@@ -30,6 +30,8 @@ int MemSimCalend::do_next(void)
 		qDebug() << "MemSimCalend calendar is empty O_o.";
 		return -1;
 	}
+
+	qDebug() << events.size();
 
 	if (ev_proc > 0) {
 		events.erase(events.begin()); // removes processed event which was the first in calendar
@@ -80,7 +82,7 @@ void MemSimCalend::new_ref_event(MemDevice * dev, mem_event op, quint64 addr, un
 
 //! class MemSimCalendEvent
 
-MemSimCalendEvent::MemSimCalendEvent(unsigned int t, int prio, MemDeviceEvent ev) : prio(prio), t(t), event(ev) {}
+MemSimCalendEvent::MemSimCalendEvent(quint64 t, int prio, MemDeviceEvent ev) : prio(prio), t(t), event(ev) {}
 
 MemSimCalendEvent::~MemSimCalendEvent() {}
 

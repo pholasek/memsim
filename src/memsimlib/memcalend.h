@@ -72,7 +72,7 @@ class MemSimCalend
 		 */
 		MemSimCalendEvent & get_first();
 		//! Value of simulation Time.
-                long unsigned int Time;
+                quint64 Time;
 		//! Event-calendar.
 		QList<MemSimCalendEvent> events;
 		//! Pointer to the current device where are events scheduled
@@ -91,7 +91,7 @@ class MemSimCalendEvent
 		//! A constructor.
 		MemSimCalendEvent() : prio(0), t(0), event(MemDeviceEvent()) {}
 		//! A constructor.
-		MemSimCalendEvent(unsigned int t, int prio, MemDeviceEvent ev);
+		MemSimCalendEvent(quint64 t, int prio, MemDeviceEvent ev);
 		//! A destructor.
 		~MemSimCalendEvent();
 		//! Sets priority of event
@@ -113,7 +113,7 @@ class MemSimCalendEvent
 		//! Priority of the event.
 		int prio;
 		//! Execution time of the event.
-		unsigned long t;
+		quint64 t;
 		//! Class encapsulating access data.
 		MemDeviceEvent event;
 };

@@ -142,6 +142,8 @@ void MemSimCli::process_command(int cmd, QStringList & args)
 		out << ex.what() << " Non-existing device has been chosen.";
 	} catch (const ConfigErrorEmptyHierarchy &ex) {
 		out << ex.what() << " There are no active devices for simulation.";
+	} catch (const ConfigErrorNoPageTable &ex) {
+		out << ex.what() << " You need to enable page table first.";
 	} catch (const TraceIOLine &ex) {
 		out << ex.what() << " Wrong format of trace line.";
 	}

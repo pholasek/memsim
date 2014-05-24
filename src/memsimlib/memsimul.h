@@ -68,6 +68,16 @@ class MemSimulation
 		 * \param[in] name Name of device.
 		 */
 		void remove_device(QString & name);
+		//! Enable device
+		/*!
+		 * \param[in] name Name of device.
+		 */
+		void enable_device(QString & name);
+		//! Disable device
+		/*!
+		 * \param[in] name Name of device.
+		 */
+		void disable_device(QString & name);
 		//! Shows all devices in model
 		/*!
 		 * \return List of deviced by QString.
