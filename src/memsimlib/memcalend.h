@@ -15,6 +15,18 @@
 #include "memdevice.h"
 
 class MemSimCalendEvent;
+//
+//! Structure for returning calendar stats
+class MemSimCalendStats
+{
+	public:
+		//! A Constructor
+		MemSimCalendStats(quint64 Time, quint64 ev_proc) : Time(Time), ev_proc(ev_proc) {}
+		//! Value of model time
+		quint64 Time;
+		//! Number of processed memory accesses
+		quint64 ev_proc;
+};
 
 //! next-event calendar class
 /*!
@@ -60,6 +72,10 @@ class MemSimCalend
 		 * \param dev[in] target MemoryDevice for cloning
 		 */
 		void clone_current(MemDevice * dev);
+		//! Reset calendar state
+		void reset_calend();
+		//! Returns calendar statistics
+		MemSimCalendStats get_stats();
         private:
 		//! Add new event to calenda
 		/*!
@@ -71,17 +87,10 @@ class MemSimCalend
 		 * \return The first event in sorted calendar
 		 */
 		MemSimCalendEvent & get_first();
-		//! Value of simulation Time.
-                quint64 Time;
 		//! Event-calendar.
 		QList<MemSimCalendEvent> events;
-		//! Pointer to the current device where are events scheduled
-		/*!
-		 * \todo Move into MemHierarchy
-		 */
-		MemSimCalendEvent * curr_ev;
-		//! Number of all processed events.
-		unsigned long ev_proc;
+		//! next-event calendar stats
+		MemSimCalendStats stats;
 };
 
 //! Class which describe one single memory access event.

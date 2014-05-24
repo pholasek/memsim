@@ -88,6 +88,11 @@ class MemSimulation
 		 * \return List of all statistics of devices in model.
 		 */
 		QString show_statsall();
+		//! Shows calendar statistics
+		/*!
+		 * \return Calendar statistics
+		 */
+		QString show_calendstats();
         private:
 		//! Process single trace line
 		/*

@@ -18,7 +18,7 @@ static inline bool event_time_cmp(const MemSimCalendEvent & e1, const MemSimCale
 		return e1.get_prio() < e2.get_prio();
 }
 
-MemSimCalend::MemSimCalend() : Time(0), curr_ev(NULL), ev_proc(0) {}
+MemSimCalend::MemSimCalend() : stats(0,0) {}
 
 MemSimCalend::~MemSimCalend() {}
 
@@ -32,15 +32,15 @@ int MemSimCalend::do_next(void)
 	}
 
 
-	if (ev_proc > 0) {
+	if (stats.ev_proc > 0) {
 		events.erase(events.begin()); // removes processed event which was the first in calendar
 	}
 
 	MemSimCalendEvent & first = get_first();
-	Time = first.get_time();
+	stats.Time = first.get_time();
 	ret = first.do_event();
 
-	ev_proc++;
+	stats.ev_proc++;
 
 	return ret;
 }
@@ -50,7 +50,7 @@ void MemSimCalend::clone_current(MemDevice * new_dev)
 	MemDeviceEvent ev_curr = (events.begin())->get_event();
 
 	ev_curr.set_dev(new_dev);
-	MemSimCalendEvent ev_new(Time + new_dev->get_latency(), 0, ev_curr);
+	MemSimCalendEvent ev_new(stats.Time + new_dev->get_latency(), 0, ev_curr);
 
 	add_event(ev_new);
 }
@@ -69,14 +69,27 @@ void MemSimCalend::add_event(MemSimCalendEvent & ev)
 
 void MemSimCalend::new_fetch_event(MemDevice * dev, mem_event op, unsigned long prio)
 {
-	MemSimCalendEvent ev(Time + dev->get_latency(), prio, MemDeviceEvent(dev, op));
+	MemSimCalendEvent ev(stats.Time + dev->get_latency(), prio, MemDeviceEvent(dev, op));
 	add_event(ev);
 }
 
 void MemSimCalend::new_ref_event(MemDevice * dev, mem_event op, quint64 addr, unsigned long size, unsigned long prio)
 {
-	MemSimCalendEvent ev(Time + dev->get_latency(), prio, MemDeviceEvent(dev, op, ev_info(addr, size)));
+	MemSimCalendEvent ev(stats.Time + dev->get_latency(), prio, MemDeviceEvent(dev, op, ev_info(addr, size)));
 	this->add_event(ev);
+}
+
+void MemSimCalend::reset_calend()
+{
+	//! Store previous values before deleting.
+	events.clear();
+	stats.ev_proc = 0;
+	stats.Time = 0;
+}
+
+MemSimCalendStats MemSimCalend::get_stats()
+{
+	return stats;
 }
 
 //! class MemSimCalendEvent

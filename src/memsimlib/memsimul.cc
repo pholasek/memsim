@@ -76,7 +76,7 @@ QString MemSimulationObj::show_stats(void)
 
 QString MemSimulationObj::show_statsall(void)
 {
-	return obj->show_statsall();
+	return obj->show_calendstats() + obj->show_statsall();
 }
 
 void MemSimulationObj::add_device(QString & name)
@@ -311,6 +311,7 @@ void MemSimulation::sim_trace(MemTrace & trace)
 	mem_t found;
 
 	devs.commit_changes();
+	cal.reset_calend();
 
 	if (!trace.get_size())
 		return;
@@ -489,4 +490,13 @@ QString MemSimulation::show_devs()
 QString MemSimulation::show_statsall()
 {
 	return devs.show_stats();
+}
+
+QString MemSimulation::show_calendstats()
+{
+	MemSimCalendStats stats = cal.get_stats();
+	
+	return QString("Calendar stats:\n\tTime (cpu clocks) of simulation: %1\n\tNumber of memory accesses:%2\n")
+		.arg(stats.Time)
+		.arg(stats.ev_proc);
 }
