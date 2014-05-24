@@ -31,7 +31,6 @@ int MemSimCalend::do_next(void)
 		return -1;
 	}
 
-	qDebug() << events.size();
 
 	if (ev_proc > 0) {
 		events.erase(events.begin()); // removes processed event which was the first in calendar
@@ -68,15 +67,15 @@ void MemSimCalend::add_event(MemSimCalendEvent & ev)
 	events.push_back(ev);
 }
 
-void MemSimCalend::new_fetch_event(MemDevice * dev, mem_event op, unsigned long latency, unsigned long prio)
+void MemSimCalend::new_fetch_event(MemDevice * dev, mem_event op, unsigned long prio)
 {
-	MemSimCalendEvent ev(Time + latency, prio, MemDeviceEvent(dev, op));
+	MemSimCalendEvent ev(Time + dev->get_latency(), prio, MemDeviceEvent(dev, op));
 	add_event(ev);
 }
 
-void MemSimCalend::new_ref_event(MemDevice * dev, mem_event op, quint64 addr, unsigned long size, unsigned long latency, unsigned long prio)
+void MemSimCalend::new_ref_event(MemDevice * dev, mem_event op, quint64 addr, unsigned long size, unsigned long prio)
 {
-	MemSimCalendEvent ev(Time + latency, prio, MemDeviceEvent(dev, op, ev_info(addr, size)));
+	MemSimCalendEvent ev(Time + dev->get_latency(), prio, MemDeviceEvent(dev, op, ev_info(addr, size)));
 	this->add_event(ev);
 }
 

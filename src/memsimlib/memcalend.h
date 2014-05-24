@@ -37,7 +37,7 @@ class MemSimCalend
 		 * \param[in] prio priority of the event
 		 * \todo Move latency deeper.
 		 */
-		void new_fetch_event(MemDevice * dev, mem_event op, unsigned long latency, unsigned long prio);
+		void new_fetch_event(MemDevice * dev, mem_event op, unsigned long prio);
 		//! Scheduling new event of memory read/write
 		/*!
 		 * \param[in] dev device in model where the instruction fetch event will be scheduled
@@ -47,7 +47,7 @@ class MemSimCalend
 		 * \param[in] latency latency of device
 		 * \param[in] prio priority of the event
 		 */
-		void new_ref_event(MemDevice * dev, mem_event op, quint64 addr, unsigned long size, unsigned long latency, unsigned long prio);
+		void new_ref_event(MemDevice * dev, mem_event op, quint64 addr, unsigned long size,  unsigned long prio);
 		//! Do the next scheduled event
 		/*!
 		 * \return Result of access

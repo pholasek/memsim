@@ -256,20 +256,20 @@ mem_t MemSimulation::search_vm(const MemTraceEntry & e)
 
 	/* Search in TLB */
 	if (devs.has_tlb()) {
-		cal.new_ref_event(devs.get_tlb(), RREF, e.address, e.size, devs.get_tlb()->get_latency(), 0);
+		cal.new_ref_event(devs.get_tlb(), RREF, e.address, e.size, 0);
 		ret = cal.do_next();
 	}
 	if (ret == HIT)
 		return TLB;
 	else if (ret == FAULT && devs.has_pg_table()) { /* We need to translate address in page table */
-		cal.new_ref_event(devs.get_pg_table(), RREF, e.address, e.size, devs.get_pg_table()->get_latency(), 0);
+		cal.new_ref_event(devs.get_pg_table(), RREF, e.address, e.size, 0);
 		/* Search in page table*/
 		ret = cal.do_next();
 	}
 	if (ret == HIT)
 		return PT;
 	else if (ret == FAULT && devs.has_swap()) { /* We need to fetch data from swap. Swap is mandatory here. */
-		cal.new_ref_event(devs.get_swap(), RREF, e.address, e.size, devs.get_swap()->get_latency(), 0);
+		cal.new_ref_event(devs.get_swap(), RREF, e.address, e.size, 0);
 		ret = cal.do_next();
 	}
 
@@ -286,16 +286,15 @@ MemDevice * MemSimulation::process_inst(const MemTraceEntry & e)
 
          switch(e.type) {
 		 case 'I':
-			 //cal->new_fetch_event(root_inst, INST, root_inst->get_latency(), 0);
-			 cal.new_ref_event(devs.get_first_inst(), INST, e.address, e.size, devs.get_first_inst()->get_latency(), 0);
+			 cal.new_ref_event(devs.get_first_inst(), INST, e.address, e.size, 0);
 			 start_dev = devs.get_first_inst();
 			 break;
 		 case 'L':
-			 cal.new_ref_event(devs.get_first_data(), RREF, e.address, e.size, devs.get_first_data()->get_latency(), 0);
+			 cal.new_ref_event(devs.get_first_data(), RREF, e.address, e.size, 0);
 			 start_dev = devs.get_first_data();
 			 break;
 		 case 'S':
-			 cal.new_ref_event(devs.get_first_data(), WREF, e.address, e.size, devs.get_first_data()->get_latency(), 0);
+			 cal.new_ref_event(devs.get_first_data(), WREF, e.address, e.size, 0);
 			 start_dev = devs.get_first_data();
 			 break;
 		default:
@@ -322,7 +321,7 @@ void MemSimulation::sim_trace(MemTrace & trace)
 		if (devs.has_pg_table()) //! If VM is turned on - address translation
 			found = search_vm(e);
 		devs.set_sim_dev(process_inst(e)); //! Process the line
-		while (!devs.on_last_dev()) { //! Search for address in ascendant order
+		while (1) { //! Search for address in ascendant order
 			ret = cal.do_next(); //! Do next action scheduled in calendar
 			if (ret == HIT || devs.on_last_dev()) //! Break and go to the next traceline
 				break;

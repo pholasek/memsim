@@ -172,7 +172,7 @@ class MemDevice
 		//! Pure virtual member.
                 virtual int do_mem_ref(quint64 addr, quint64 size) = 0;
 		//! Returns latency
-                unsigned int get_latency() { return latency; }
+                unsigned long get_latency() { return latency; }
 		//! Set latency
 		void set_latency(unsigned int lat) { latency = lat; }
 		//! A destructor
@@ -185,7 +185,7 @@ class MemDevice
 		//! A protected constructor.
                 MemDevice(mem_t type, int latency);
 		//! Latency of the device.
-                unsigned int latency;
+                unsigned long latency;
 		//! Type of the device.
 		mem_t type;
 };
