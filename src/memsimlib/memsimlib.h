@@ -15,6 +15,7 @@
 #include <QDir>
 #include <QApplication>
 #include <QFile>
+#include <QStringListModel>
 #include <QDebug>
 #include <QSharedPointer>
 
@@ -54,9 +55,9 @@ class MEMSIMLIB_EXPORT MemTraceObj
 	~MemTraceObj();
 	//! Dump processed trace to QString
 	/*!
-	 * \return QString that includes trace
+	 * \return QStringList that includes trace
 	 */
-	QString dump_trace();
+	QStringListModel *dump_trace();
 	friend class MemSimulationObj;
     private:
 	//! Library internal MemTrace class
@@ -64,6 +65,8 @@ class MEMSIMLIB_EXPORT MemTraceObj
 	 * \sa ::MemTrace
 	 */
 	::MemTrace *obj;
+	//! Trace model for MVR scheme
+	QStringListModel *trace_model;
 };
 
 //! Interface classdeclaration.
@@ -131,6 +134,8 @@ class MEMSIMLIB_EXPORT MemSimulationObj
 	 * \return List of model components
 	 */
 	QString show_hierarchy(void);
+	//! Returns raw trace
+	QStringListModel *dump_trace(int idx);
     private:
 	//! Core MemSimulation object
 	/*!

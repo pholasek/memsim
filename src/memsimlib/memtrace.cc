@@ -13,11 +13,14 @@
 //
 //! Interface class implementation
 
-MemTraceObj::MemTraceObj(QString path) : obj(new ::MemTrace(path)) {};
+MemTraceObj::MemTraceObj(QString path) : obj(new ::MemTrace(path))
+{
+	trace_model = new QStringListModel(obj->dump_trace()) ;
+};
 
-MemTraceObj::~MemTraceObj() { delete obj; }
+MemTraceObj::~MemTraceObj() { delete obj; delete trace_model; }
 
-QString MemTraceObj::dump_trace() { return obj->dump_trace(); }
+QStringListModel *MemTraceObj::dump_trace() { return trace_model; }
 
 //! A constructors.
 MemTraceEntry::MemTraceEntry(char t, long a, long s)
@@ -36,6 +39,7 @@ MemTrace::MemTrace(QString path)
         trace.clear();
         while (!file.atEnd()) {
                 QString line = file.readLine();
+		trace_model += line.remove('\n');
                 process_line(line);
         }
 
@@ -96,16 +100,17 @@ const MemTraceEntry & MemTrace::get_next(int * end)
 	}
 }
 
-//! Dump parsed trace
-QString MemTrace::dump_trace()
+//! Dump raw trace
+QStringList MemTrace::dump_trace()
 {
-	QString trace_dump;
+	/*QStringList trace_dump;
 
 	for (trace_it i = trace.begin(); i != trace.end(); ++i) {
 		MemTraceEntry e = *i;
 		trace_dump.append(QString("%1 %2 %3\n").arg(e.type).arg(e.address).arg(e.size));
 	}
 
-	return trace_dump;
+	return trace_dump;*/
+	return trace_model;
 }
 

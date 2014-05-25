@@ -13,6 +13,8 @@
 #include "memsimlib.h"
 #include <QList>
 #include <QString>
+#include <QStringList>
+#include <QStringListModel>
 
 //! Types of memory references.
 enum ref_type {
@@ -63,10 +65,12 @@ class MemTrace
 	    //! Returns trace pointer to the beginning.
 	    void reset_trace();
 	    //! \return QString containing trace.
-	    QString dump_trace();
+	    QStringList dump_trace();
     private:
 	    //! trace itself.
             QList<MemTraceEntry> trace;
+	    //! trace in model form.
+            QStringList trace_model;
 	    //! Function for parsing trace line.
             void process_line(QString line);
 	    //! Trace pointer.

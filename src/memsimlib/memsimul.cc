@@ -89,6 +89,11 @@ void MemSimulationObj::remove_device(QString & name)
 	obj->remove_device(name);
 }
 
+QStringListModel *MemSimulationObj::dump_trace(int idx)
+{
+	return traces.value(idx).data()->dump_trace();
+}
+
 //! Constructor
 //TODO settings in constructor CPUID recognize
 MemSimulation::MemSimulation() : settings(new QSettings("MemSim", "memsim"))
@@ -496,7 +501,7 @@ QString MemSimulation::show_calendstats()
 {
 	MemSimCalendStats stats = cal.get_stats();
 	
-	return QString("Calendar stats:\n\tTime (cpu clocks) of simulation: %1\n\tNumber of memory accesses:%2\n")
+	return QString("Calendar stats:\n\tTime (cpu cycles) of simulation: %1\n\tNumber of memory accesses:%2\n")
 		.arg(stats.Time)
 		.arg(stats.ev_proc);
 }

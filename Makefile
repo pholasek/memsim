@@ -28,6 +28,8 @@ docs:
 
 run-cli: memsim
 	LD_LIBRARY_PATH=./lib/ bin/memsim-cli
+run-gui: memsim
+	LD_LIBRARY_PATH=./lib/ bin/memsim-gui
 
 clean-docs:
 	rm -rf docs/*
