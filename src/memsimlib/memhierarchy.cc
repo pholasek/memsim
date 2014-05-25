@@ -260,7 +260,7 @@ void MemHierarchy::add_cache(mem_t type, int latency, long size, long lsize, lon
 void MemHierarchy::delete_ram(MemDeviceRAM *new_ram)
 {
 	if (ram)
-		delete swap;
+		delete ram;
 
 	ram = new_ram;
 

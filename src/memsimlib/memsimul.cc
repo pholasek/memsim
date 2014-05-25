@@ -41,7 +41,7 @@ int MemSimulationObj::run_trace(int id)
 	return 0;
 }
 
-void MemSimulationObj::config_param(QString & object, QString & param, QString & value)
+void MemSimulationObj::config_param(QString & object, QString & param, QString value)
 {
 	obj->set_cfg_param(object, param, value);
 }
@@ -99,6 +99,15 @@ QStringListModel *MemSimulationObj::dump_trace(int idx)
 	return traces.value(idx).data()->dump_trace();
 }
 
+bool MemSimulationObj::has_pg_table()
+{
+	return obj->has_pg_table();
+}
+
+void MemSimulationObj::set_l1split(bool val)
+{
+	obj->set_l1split(val);
+}
 //! Constructor
 //TODO settings in constructor CPUID recognize
 MemSimulation::MemSimulation() : settings(new QSettings("MemSim", "memsim"))
@@ -114,6 +123,28 @@ MemSimulation::~MemSimulation()
 }
 
 //! Methods
+void MemSimulation::toggle_l1split()
+{
+	int latency;
+	unsigned long long size, lsize, assoc;
+	bool active;
+
+	settings->beginGroup("l1");
+	latency = settings->value("latency", DEF_CACHE_LATENCY).toInt();
+	size = settings->value("size", DEF_CACHE_SIZE).toULongLong();
+	lsize = settings->value("lsize", DEF_CACHE_LSIZE).toULongLong();
+	assoc = settings->value("assoc", DEF_CACHE_ASSOC).toULongLong();
+	active = settings->value("active", false).toBool();
+	settings->endGroup();
+
+	if (active) {
+		if (l1split) {
+			devs.add_cache(L1_I, latency, size, lsize, assoc);
+		}
+		devs.add_cache(L1_D, latency, size, lsize, assoc);
+	}
+}
+
 void MemSimulation::process_cache(QStringList & groups, QString name)
 {
 	int latency;
@@ -380,17 +411,48 @@ void MemSimulation::sim_trace(MemTrace & trace)
 	trace.reset_trace();
 }
 
-void MemSimulation::valid_cfg_param(type, QString & param, quint64 value)
+void MemSimulation::valid_cfg_param(mem_t type, QString & param, quint64 value)
 {
-}
-
-void MemSimulation::set_cfg_param(QString & object, QString & param, QString & value)
-{
-	mem_t type = devs.get_type(object);
+	if (param == "active")
+		return;
 
 	switch (type) {
 		case L1_D:
 		case L1_I:
+		case L2:
+		case L3:
+		case TLB:
+			if (param != "latency" && (log2l(value)) - trunc(log2l(value)) > 0.0) {
+				qDebug() << param << trunc(log2l(value));
+				throw UserInputWrongConfigArg();
+			}
+		case RAM:
+		case SWAP:
+		case PT:
+			if (value == 0) {
+				qDebug() << value;
+				throw UserInputWrongConfigArg();
+			}
+			break;
+		default:
+			throw UserInputBadArg();
+			break;
+	}
+}
+
+void MemSimulation::set_cfg_param(QString & object, QString & param, QString & value)
+{
+	if (param == "active")
+		return;
+
+	mem_t type = devs.get_type(object);
+
+	qDebug() << object << type << value;
+
+	valid_cfg_param(type, param, value.toUInt());
+
+	switch (type) {
+		case L1_D:
 		case L2:
 		case L3:
 			devs.config_cache(type, param, value.toULong());

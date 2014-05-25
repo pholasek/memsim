@@ -29,6 +29,8 @@ class UserInputBadTraceId : public UserInput {};
 
 class UserInputBadArg : public UserInput {};
 
+class UserInputWrongConfigArg : public UserInput {};
+
 class MemError : public std::runtime_error {
 	public:
 		MemError() : std::runtime_error("Allocation error:") {}

@@ -103,7 +103,7 @@ class MEMSIMLIB_EXPORT MemSimulationObj
 	 * \param[in] param parameter of object to configure
 	 * \param[in] value new value of parameter of object
 	 */
-	void config_param(QString & object, QString & param, QString & value);
+	void config_param(QString & object, QString & param, QString value);
 	//! Get given parameter of the simulation
 	/*!
 	 * \param[in] object object of memory hierarchy described by name
@@ -143,6 +143,10 @@ class MEMSIMLIB_EXPORT MemSimulationObj
 	QString show_hierarchy(void);
 	//! Returns raw trace
 	QStringListModel *dump_trace(int idx);
+	//! Return state of page table in model
+	bool has_pg_table();
+	//! Split/unsplit L1 cache
+	void set_l1split(bool val);
     private:
 	//! Core MemSimulation object
 	/*!

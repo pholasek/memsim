@@ -94,8 +94,17 @@ class MemSimulation
 		 */
 		QString show_calendstats();
 		//! Set split of L1 cache
-		void set_l1split(bool val) { l1split = val; }
+		void set_l1split(bool val) { l1split = val; toggle_l1split(); }
+		//! Return state of pg_table
+		bool has_pg_table() { return devs.has_pg_table(); }
         private:
+		//! Valid corectness of config parameter
+		/*!
+		 * \param[in] type mem_t object
+		 * \param[in] param Parameter
+		 * \param[in] value New value of parameter
+		 */
+		void valid_cfg_param(mem_t type, QString & param, quint64 value);
 		//! Process single trace line
 		/*
 		 * \param[in] e Parsed trace line.
@@ -128,6 +137,8 @@ class MemSimulation
 		void process_model(QStringList & groups);
 		//! Init settings.
 		void init_settings();
+		//! Renew L1 caches according to l1split value
+		void toggle_l1split();
 		//! State of the simulation.
 		enum simstate state;
 		//! Simulation calendar.

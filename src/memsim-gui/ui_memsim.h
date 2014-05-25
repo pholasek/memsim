@@ -31,6 +31,7 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
+#include <powerspinbox.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -51,36 +52,42 @@ public:
     QWidget *widget;
     QFormLayout *formLayout;
     QCheckBox *l1check;
+    QRadioButton *anoldradio;
     QRadioButton *neldradio;
     QLabel *label_2;
     QSpinBox *l1miss;
     QLabel *label_6;
-    QSpinBox *l1size;
+    PowerSpinBox *l1size;
     QLabel *label_7;
-    QSpinBox *l1assoc;
+    PowerSpinBox *l1assoc;
     QCheckBox *l2check;
-    QLabel *label_3;
-    QSpinBox *l2size;
-    QLabel *label_4;
-    QSpinBox *l2assoc;
-    QCheckBox *l3check;
-    QLabel *label_8;
-    QSpinBox *l3size;
-    QLabel *label_9;
-    QSpinBox *l3assoc;
-    QCheckBox *tlbcheck;
-    QLabel *label_10;
-    QSpinBox *tlbentries;
-    QLabel *label_11;
-    QSpinBox *tlbassoc;
     QLabel *label_5;
-    QLabel *label;
-    QLabel *label_12;
     QSpinBox *l2miss;
+    QLabel *label_3;
+    PowerSpinBox *l2size;
+    QLabel *label_4;
+    PowerSpinBox *l2assoc;
+    QCheckBox *l3check;
+    QLabel *label_12;
     QSpinBox *l3miss;
+    QLabel *label_8;
+    PowerSpinBox *l3size;
+    QLabel *label_9;
+    PowerSpinBox *l3assoc;
+    QCheckBox *tlbcheck;
+    QLabel *label;
     QSpinBox *tlbmiss;
+    QLabel *label_10;
+    PowerSpinBox *tlbentries;
+    QLabel *label_11;
+    PowerSpinBox *tlbassoc;
+    QCheckBox *pgtblcheck;
+    QLabel *label_13;
+    QSpinBox *pgtablemiss;
+    QLabel *label_14;
     QPushButton *pushButton;
-    QRadioButton *anoldradio;
+    QSpinBox *swapmiss;
+    QCheckBox *swapcheck;
     QPlainTextEdit *plainTextEdit;
     QMenuBar *menubar;
     QMenu *menuFile;
@@ -93,7 +100,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(810, 817);
+        MainWindow->resize(810, 872);
         actionRun = new QAction(MainWindow);
         actionRun->setObjectName(QString::fromUtf8("actionRun"));
         action_Load_File = new QAction(MainWindow);
@@ -145,6 +152,11 @@ public:
 
         formLayout->setWidget(0, QFormLayout::LabelRole, l1check);
 
+        anoldradio = new QRadioButton(frame_2);
+        anoldradio->setObjectName(QString::fromUtf8("anoldradio"));
+
+        formLayout->setWidget(1, QFormLayout::LabelRole, anoldradio);
+
         neldradio = new QRadioButton(frame_2);
         neldradio->setObjectName(QString::fromUtf8("neldradio"));
 
@@ -157,6 +169,7 @@ public:
 
         l1miss = new QSpinBox(frame_2);
         l1miss->setObjectName(QString::fromUtf8("l1miss"));
+        l1miss->setMinimum(1);
         l1miss->setMaximum(999999999);
 
         formLayout->setWidget(3, QFormLayout::FieldRole, l1miss);
@@ -166,8 +179,9 @@ public:
 
         formLayout->setWidget(4, QFormLayout::LabelRole, label_6);
 
-        l1size = new QSpinBox(frame_2);
+        l1size = new PowerSpinBox(frame_2);
         l1size->setObjectName(QString::fromUtf8("l1size"));
+        l1size->setMinimum(2);
         l1size->setMaximum(999999999);
 
         formLayout->setWidget(4, QFormLayout::FieldRole, l1size);
@@ -177,8 +191,9 @@ public:
 
         formLayout->setWidget(5, QFormLayout::LabelRole, label_7);
 
-        l1assoc = new QSpinBox(frame_2);
+        l1assoc = new PowerSpinBox(frame_2);
         l1assoc->setObjectName(QString::fromUtf8("l1assoc"));
+        l1assoc->setMinimum(1);
         l1assoc->setMaximum(999999999);
 
         formLayout->setWidget(5, QFormLayout::FieldRole, l1assoc);
@@ -188,13 +203,26 @@ public:
 
         formLayout->setWidget(6, QFormLayout::LabelRole, l2check);
 
+        label_5 = new QLabel(frame_2);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+
+        formLayout->setWidget(7, QFormLayout::LabelRole, label_5);
+
+        l2miss = new QSpinBox(frame_2);
+        l2miss->setObjectName(QString::fromUtf8("l2miss"));
+        l2miss->setMinimum(1);
+        l2miss->setMaximum(999999999);
+
+        formLayout->setWidget(7, QFormLayout::FieldRole, l2miss);
+
         label_3 = new QLabel(frame_2);
         label_3->setObjectName(QString::fromUtf8("label_3"));
 
         formLayout->setWidget(8, QFormLayout::LabelRole, label_3);
 
-        l2size = new QSpinBox(frame_2);
+        l2size = new PowerSpinBox(frame_2);
         l2size->setObjectName(QString::fromUtf8("l2size"));
+        l2size->setMinimum(2);
         l2size->setMaximum(999999999);
 
         formLayout->setWidget(8, QFormLayout::FieldRole, l2size);
@@ -204,8 +232,9 @@ public:
 
         formLayout->setWidget(9, QFormLayout::LabelRole, label_4);
 
-        l2assoc = new QSpinBox(frame_2);
+        l2assoc = new PowerSpinBox(frame_2);
         l2assoc->setObjectName(QString::fromUtf8("l2assoc"));
+        l2assoc->setMinimum(1);
         l2assoc->setMaximum(999999999);
 
         formLayout->setWidget(9, QFormLayout::FieldRole, l2assoc);
@@ -215,13 +244,26 @@ public:
 
         formLayout->setWidget(10, QFormLayout::LabelRole, l3check);
 
+        label_12 = new QLabel(frame_2);
+        label_12->setObjectName(QString::fromUtf8("label_12"));
+
+        formLayout->setWidget(11, QFormLayout::LabelRole, label_12);
+
+        l3miss = new QSpinBox(frame_2);
+        l3miss->setObjectName(QString::fromUtf8("l3miss"));
+        l3miss->setMinimum(1);
+        l3miss->setMaximum(999999999);
+
+        formLayout->setWidget(11, QFormLayout::FieldRole, l3miss);
+
         label_8 = new QLabel(frame_2);
         label_8->setObjectName(QString::fromUtf8("label_8"));
 
         formLayout->setWidget(12, QFormLayout::LabelRole, label_8);
 
-        l3size = new QSpinBox(frame_2);
+        l3size = new PowerSpinBox(frame_2);
         l3size->setObjectName(QString::fromUtf8("l3size"));
+        l3size->setMinimum(2);
         l3size->setMaximum(999999999);
 
         formLayout->setWidget(12, QFormLayout::FieldRole, l3size);
@@ -231,8 +273,9 @@ public:
 
         formLayout->setWidget(13, QFormLayout::LabelRole, label_9);
 
-        l3assoc = new QSpinBox(frame_2);
+        l3assoc = new PowerSpinBox(frame_2);
         l3assoc->setObjectName(QString::fromUtf8("l3assoc"));
+        l3assoc->setMinimum(1);
         l3assoc->setMaximum(999999999);
 
         formLayout->setWidget(13, QFormLayout::FieldRole, l3assoc);
@@ -242,13 +285,26 @@ public:
 
         formLayout->setWidget(14, QFormLayout::LabelRole, tlbcheck);
 
+        label = new QLabel(frame_2);
+        label->setObjectName(QString::fromUtf8("label"));
+
+        formLayout->setWidget(15, QFormLayout::LabelRole, label);
+
+        tlbmiss = new QSpinBox(frame_2);
+        tlbmiss->setObjectName(QString::fromUtf8("tlbmiss"));
+        tlbmiss->setMinimum(1);
+        tlbmiss->setMaximum(999999999);
+
+        formLayout->setWidget(15, QFormLayout::FieldRole, tlbmiss);
+
         label_10 = new QLabel(frame_2);
         label_10->setObjectName(QString::fromUtf8("label_10"));
 
         formLayout->setWidget(16, QFormLayout::LabelRole, label_10);
 
-        tlbentries = new QSpinBox(frame_2);
+        tlbentries = new PowerSpinBox(frame_2);
         tlbentries->setObjectName(QString::fromUtf8("tlbentries"));
+        tlbentries->setMinimum(1);
         tlbentries->setMaximum(999999999);
 
         formLayout->setWidget(16, QFormLayout::FieldRole, tlbentries);
@@ -258,54 +314,51 @@ public:
 
         formLayout->setWidget(17, QFormLayout::LabelRole, label_11);
 
-        tlbassoc = new QSpinBox(frame_2);
+        tlbassoc = new PowerSpinBox(frame_2);
         tlbassoc->setObjectName(QString::fromUtf8("tlbassoc"));
+        tlbassoc->setMinimum(1);
         tlbassoc->setMaximum(999999999);
 
         formLayout->setWidget(17, QFormLayout::FieldRole, tlbassoc);
 
-        label_5 = new QLabel(frame_2);
-        label_5->setObjectName(QString::fromUtf8("label_5"));
+        pgtblcheck = new QCheckBox(frame_2);
+        pgtblcheck->setObjectName(QString::fromUtf8("pgtblcheck"));
 
-        formLayout->setWidget(7, QFormLayout::LabelRole, label_5);
+        formLayout->setWidget(18, QFormLayout::LabelRole, pgtblcheck);
 
-        label = new QLabel(frame_2);
-        label->setObjectName(QString::fromUtf8("label"));
+        label_13 = new QLabel(frame_2);
+        label_13->setObjectName(QString::fromUtf8("label_13"));
 
-        formLayout->setWidget(15, QFormLayout::LabelRole, label);
+        formLayout->setWidget(19, QFormLayout::LabelRole, label_13);
 
-        label_12 = new QLabel(frame_2);
-        label_12->setObjectName(QString::fromUtf8("label_12"));
+        pgtablemiss = new QSpinBox(frame_2);
+        pgtablemiss->setObjectName(QString::fromUtf8("pgtablemiss"));
+        pgtablemiss->setMinimum(1);
+        pgtablemiss->setMaximum(999999999);
 
-        formLayout->setWidget(11, QFormLayout::LabelRole, label_12);
+        formLayout->setWidget(19, QFormLayout::FieldRole, pgtablemiss);
 
-        l2miss = new QSpinBox(frame_2);
-        l2miss->setObjectName(QString::fromUtf8("l2miss"));
-        l2miss->setMaximum(999999999);
+        label_14 = new QLabel(frame_2);
+        label_14->setObjectName(QString::fromUtf8("label_14"));
 
-        formLayout->setWidget(7, QFormLayout::FieldRole, l2miss);
-
-        l3miss = new QSpinBox(frame_2);
-        l3miss->setObjectName(QString::fromUtf8("l3miss"));
-        l3miss->setMaximum(999999999);
-
-        formLayout->setWidget(11, QFormLayout::FieldRole, l3miss);
-
-        tlbmiss = new QSpinBox(frame_2);
-        tlbmiss->setObjectName(QString::fromUtf8("tlbmiss"));
-        tlbmiss->setMaximum(999999999);
-
-        formLayout->setWidget(15, QFormLayout::FieldRole, tlbmiss);
+        formLayout->setWidget(21, QFormLayout::LabelRole, label_14);
 
         pushButton = new QPushButton(frame_2);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
 
-        formLayout->setWidget(18, QFormLayout::LabelRole, pushButton);
+        formLayout->setWidget(22, QFormLayout::LabelRole, pushButton);
 
-        anoldradio = new QRadioButton(frame_2);
-        anoldradio->setObjectName(QString::fromUtf8("anoldradio"));
+        swapmiss = new QSpinBox(frame_2);
+        swapmiss->setObjectName(QString::fromUtf8("swapmiss"));
+        swapmiss->setMinimum(1);
+        swapmiss->setMaximum(999999999);
 
-        formLayout->setWidget(1, QFormLayout::LabelRole, anoldradio);
+        formLayout->setWidget(21, QFormLayout::FieldRole, swapmiss);
+
+        swapcheck = new QCheckBox(frame_2);
+        swapcheck->setObjectName(QString::fromUtf8("swapcheck"));
+
+        formLayout->setWidget(20, QFormLayout::LabelRole, swapcheck);
 
 
         horizontalLayout->addLayout(formLayout);
@@ -347,6 +400,8 @@ public:
         menuSimulation->addAction(actionRun_stp);
 
         retranslateUi(MainWindow);
+        QObject::connect(pgtblcheck, SIGNAL(clicked(bool)), tlbcheck, SLOT(setEnabled(bool)));
+        QObject::connect(pgtblcheck, SIGNAL(clicked(bool)), swapcheck, SLOT(setEnabled(bool)));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -359,24 +414,28 @@ public:
         action_Settings->setText(QApplication::translate("MainWindow", "&Settings", 0, QApplication::UnicodeUTF8));
         actionRun_stp->setText(QApplication::translate("MainWindow", "Run step", 0, QApplication::UnicodeUTF8));
         l1check->setText(QApplication::translate("MainWindow", "L1", 0, QApplication::UnicodeUTF8));
+        anoldradio->setText(QApplication::translate("MainWindow", "I a D spole\304\215n\303\251", 0, QApplication::UnicodeUTF8));
         neldradio->setText(QApplication::translate("MainWindow", "I a D odd\304\233leny", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("MainWindow", "MissTime", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("MainWindow", "Velikost", 0, QApplication::UnicodeUTF8));
         label_7->setText(QApplication::translate("MainWindow", "Asociativita", 0, QApplication::UnicodeUTF8));
         l2check->setText(QApplication::translate("MainWindow", "L2", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("MainWindow", "MissTime", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainWindow", "Velikost", 0, QApplication::UnicodeUTF8));
         label_4->setText(QApplication::translate("MainWindow", "Asociativita", 0, QApplication::UnicodeUTF8));
         l3check->setText(QApplication::translate("MainWindow", "L3", 0, QApplication::UnicodeUTF8));
+        label_12->setText(QApplication::translate("MainWindow", "MissTime", 0, QApplication::UnicodeUTF8));
         label_8->setText(QApplication::translate("MainWindow", "Velikost", 0, QApplication::UnicodeUTF8));
         label_9->setText(QApplication::translate("MainWindow", "Asociativita", 0, QApplication::UnicodeUTF8));
         tlbcheck->setText(QApplication::translate("MainWindow", "TLB", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("MainWindow", "MissTime", 0, QApplication::UnicodeUTF8));
         label_10->setText(QApplication::translate("MainWindow", "Polo\305\276ky", 0, QApplication::UnicodeUTF8));
         label_11->setText(QApplication::translate("MainWindow", "Asociativita", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("MainWindow", "MissTime", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("MainWindow", "MissTime", 0, QApplication::UnicodeUTF8));
-        label_12->setText(QApplication::translate("MainWindow", "MissTime", 0, QApplication::UnicodeUTF8));
+        pgtblcheck->setText(QApplication::translate("MainWindow", "Tabulka str\303\241nek", 0, QApplication::UnicodeUTF8));
+        label_13->setText(QApplication::translate("MainWindow", "AvgMissTime", 0, QApplication::UnicodeUTF8));
+        label_14->setText(QApplication::translate("MainWindow", "LoadTime", 0, QApplication::UnicodeUTF8));
         pushButton->setText(QApplication::translate("MainWindow", "Ulo\305\276it", 0, QApplication::UnicodeUTF8));
-        anoldradio->setText(QApplication::translate("MainWindow", "I a D spole\304\215n\303\251", 0, QApplication::UnicodeUTF8));
+        swapcheck->setText(QApplication::translate("MainWindow", "Swap", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("MainWindow", "&File", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("MainWindow", "&Edit", 0, QApplication::UnicodeUTF8));
         menuSimulation->setTitle(QApplication::translate("MainWindow", "&Simulation", 0, QApplication::UnicodeUTF8));

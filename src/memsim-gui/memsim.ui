@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>810</width>
-    <height>817</height>
+    <height>872</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -63,6 +63,13 @@
            </property>
           </widget>
          </item>
+         <item row="1" column="0">
+          <widget class="QRadioButton" name="anoldradio">
+           <property name="text">
+            <string>I a D společné</string>
+           </property>
+          </widget>
+         </item>
          <item row="2" column="0">
           <widget class="QRadioButton" name="neldradio">
            <property name="text">
@@ -79,6 +86,9 @@
          </item>
          <item row="3" column="1">
           <widget class="QSpinBox" name="l1miss">
+           <property name="minimum">
+            <number>1</number>
+           </property>
            <property name="maximum">
             <number>999999999</number>
            </property>
@@ -92,7 +102,10 @@
           </widget>
          </item>
          <item row="4" column="1">
-          <widget class="QSpinBox" name="l1size">
+          <widget class="PowerSpinBox" name="l1size">
+           <property name="minimum">
+            <number>2</number>
+           </property>
            <property name="maximum">
             <number>999999999</number>
            </property>
@@ -106,7 +119,10 @@
           </widget>
          </item>
          <item row="5" column="1">
-          <widget class="QSpinBox" name="l1assoc">
+          <widget class="PowerSpinBox" name="l1assoc">
+           <property name="minimum">
+            <number>1</number>
+           </property>
            <property name="maximum">
             <number>999999999</number>
            </property>
@@ -119,6 +135,23 @@
            </property>
           </widget>
          </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>MissTime</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QSpinBox" name="l2miss">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>999999999</number>
+           </property>
+          </widget>
+         </item>
          <item row="8" column="0">
           <widget class="QLabel" name="label_3">
            <property name="text">
@@ -127,7 +160,10 @@
           </widget>
          </item>
          <item row="8" column="1">
-          <widget class="QSpinBox" name="l2size">
+          <widget class="PowerSpinBox" name="l2size">
+           <property name="minimum">
+            <number>2</number>
+           </property>
            <property name="maximum">
             <number>999999999</number>
            </property>
@@ -141,7 +177,10 @@
           </widget>
          </item>
          <item row="9" column="1">
-          <widget class="QSpinBox" name="l2assoc">
+          <widget class="PowerSpinBox" name="l2assoc">
+           <property name="minimum">
+            <number>1</number>
+           </property>
            <property name="maximum">
             <number>999999999</number>
            </property>
@@ -154,6 +193,23 @@
            </property>
           </widget>
          </item>
+         <item row="11" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>MissTime</string>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="1">
+          <widget class="QSpinBox" name="l3miss">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>999999999</number>
+           </property>
+          </widget>
+         </item>
          <item row="12" column="0">
           <widget class="QLabel" name="label_8">
            <property name="text">
@@ -162,7 +218,10 @@
           </widget>
          </item>
          <item row="12" column="1">
-          <widget class="QSpinBox" name="l3size">
+          <widget class="PowerSpinBox" name="l3size">
+           <property name="minimum">
+            <number>2</number>
+           </property>
            <property name="maximum">
             <number>999999999</number>
            </property>
@@ -176,7 +235,10 @@
           </widget>
          </item>
          <item row="13" column="1">
-          <widget class="QSpinBox" name="l3assoc">
+          <widget class="PowerSpinBox" name="l3assoc">
+           <property name="minimum">
+            <number>1</number>
+           </property>
            <property name="maximum">
             <number>999999999</number>
            </property>
@@ -189,6 +251,23 @@
            </property>
           </widget>
          </item>
+         <item row="15" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>MissTime</string>
+           </property>
+          </widget>
+         </item>
+         <item row="15" column="1">
+          <widget class="QSpinBox" name="tlbmiss">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>999999999</number>
+           </property>
+          </widget>
+         </item>
          <item row="16" column="0">
           <widget class="QLabel" name="label_10">
            <property name="text">
@@ -197,7 +276,10 @@
           </widget>
          </item>
          <item row="16" column="1">
-          <widget class="QSpinBox" name="tlbentries">
+          <widget class="PowerSpinBox" name="tlbentries">
+           <property name="minimum">
+            <number>1</number>
+           </property>
            <property name="maximum">
             <number>999999999</number>
            </property>
@@ -211,65 +293,67 @@
           </widget>
          </item>
          <item row="17" column="1">
-          <widget class="QSpinBox" name="tlbassoc">
-           <property name="maximum">
-            <number>999999999</number>
+          <widget class="PowerSpinBox" name="tlbassoc">
+           <property name="minimum">
+            <number>1</number>
            </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="label_5">
-           <property name="text">
-            <string>MissTime</string>
-           </property>
-          </widget>
-         </item>
-         <item row="15" column="0">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>MissTime</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="0">
-          <widget class="QLabel" name="label_12">
-           <property name="text">
-            <string>MissTime</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="1">
-          <widget class="QSpinBox" name="l2miss">
-           <property name="maximum">
-            <number>999999999</number>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="1">
-          <widget class="QSpinBox" name="l3miss">
-           <property name="maximum">
-            <number>999999999</number>
-           </property>
-          </widget>
-         </item>
-         <item row="15" column="1">
-          <widget class="QSpinBox" name="tlbmiss">
            <property name="maximum">
             <number>999999999</number>
            </property>
           </widget>
          </item>
          <item row="18" column="0">
+          <widget class="QCheckBox" name="pgtblcheck">
+           <property name="text">
+            <string>Tabulka stránek</string>
+           </property>
+          </widget>
+         </item>
+         <item row="19" column="0">
+          <widget class="QLabel" name="label_13">
+           <property name="text">
+            <string>AvgMissTime</string>
+           </property>
+          </widget>
+         </item>
+         <item row="19" column="1">
+          <widget class="QSpinBox" name="pgtablemiss">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>999999999</number>
+           </property>
+          </widget>
+         </item>
+         <item row="21" column="0">
+          <widget class="QLabel" name="label_14">
+           <property name="text">
+            <string>LoadTime</string>
+           </property>
+          </widget>
+         </item>
+         <item row="22" column="0">
           <widget class="QPushButton" name="pushButton">
            <property name="text">
             <string>Uložit</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
-          <widget class="QRadioButton" name="anoldradio">
+         <item row="21" column="1">
+          <widget class="QSpinBox" name="swapmiss">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>999999999</number>
+           </property>
+          </widget>
+         </item>
+         <item row="20" column="0">
+          <widget class="QCheckBox" name="swapcheck">
            <property name="text">
-            <string>I a D společné</string>
+            <string>Swap</string>
            </property>
           </widget>
          </item>
@@ -360,6 +444,46 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PowerSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header location="global">powerspinbox.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pgtblcheck</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>tlbcheck</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>457</x>
+     <y>624</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>454</x>
+     <y>504</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pgtblcheck</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>swapcheck</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>511</x>
+     <y>634</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>487</x>
+     <y>694</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

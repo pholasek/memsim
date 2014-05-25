@@ -25,6 +25,107 @@ MemSimGui::~MemSimGui()
 
 void MemSimGui::write_settings()
 {
+	QString obj, param;
+
+	try {
+
+	obj = QString("l1");
+	param = QString("latency");
+	sim.config_param(obj,param, QString().setNum(ui->l1miss->value()));
+	ui->l1miss->setFocus();
+	obj = QString("l1");
+	param = QString("size");
+	sim.config_param(obj,param, QString().setNum(ui->l1size->value()));
+	ui->l1size->setFocus();
+	obj = QString("l1");
+	param = QString("assoc");
+	sim.config_param(obj,param, QString().setNum(ui->l1size->value()));
+	ui->l1assoc->setFocus();
+	if (ui->l1check->isChecked())
+		sim.add_device(obj);
+	else
+		sim.remove_device(obj);
+	sim.set_l1split(ui->anoldradio->isChecked());
+
+	obj = QString("l2");
+	param = QString("latency");
+	sim.config_param(obj,param, QString().setNum(ui->l2miss->value()));
+	ui->l2miss->setFocus();
+	obj = QString("l2");
+	param = QString("size");
+	sim.config_param(obj,param, QString().setNum(ui->l2size->value()));
+	ui->l2size->setFocus();
+	obj = QString("l2");
+	param = QString("assoc");
+	sim.config_param(obj,param, QString().setNum(ui->l2assoc->value()));
+	ui->l2assoc->setFocus();
+	if (ui->l2check->isChecked())
+		sim.add_device(obj);
+	else
+		sim.remove_device(obj);
+
+	obj = QString("l3");
+	param = QString("latency");
+	sim.config_param(obj,param, QString().setNum(ui->l3miss->value()));
+	ui->l3miss->setFocus();
+	obj = QString("l3");
+	param = QString("size");
+	sim.config_param(obj,param, QString().setNum(ui->l3size->value()));
+	ui->l3size->setFocus();
+	obj = QString("l3");
+	param = QString("assoc");
+	sim.config_param(obj,param, QString().setNum(ui->l3assoc->value()));
+	ui->l3assoc->setFocus();
+	if (ui->l3check->isChecked())
+		sim.add_device(obj);
+	else
+		sim.remove_device(obj);
+
+	obj = QString("pt");
+	param = QString("latency");
+	sim.config_param(obj,param, QString().setNum(ui->pgtablemiss->value()));
+	ui->pgtablemiss->setFocus();
+	if (ui->pgtblcheck->isChecked())
+		sim.add_device(obj);
+	else
+		sim.remove_device(obj);
+
+	if (sim.has_pg_table()) {
+		obj = QString("tlb");
+		param = QString("latency");
+		sim.config_param(obj,param, QString().setNum(ui->tlbmiss->value()));
+		ui->tlbmiss->setFocus();
+		obj = QString("tlb");
+		param = QString("entries");
+		sim.config_param(obj,param, QString().setNum(ui->tlbentries->value()));
+		ui->tlbentries->setFocus();
+		obj = QString("tlb");
+		param = QString("assoc");
+		sim.config_param(obj,param, QString().setNum(ui->tlbassoc->value()));
+		ui->tlbassoc->setFocus();
+		if (ui->tlbcheck->isChecked())
+			sim.add_device(obj);
+		else
+			sim.remove_device(obj);
+
+		obj = QString("swap");
+		param = QString("latency");
+		sim.config_param(obj,param, QString().setNum(ui->pgtablemiss->value()));
+		ui->swapmiss->setFocus();
+		if (ui->swapcheck->isChecked())
+			sim.add_device(obj);
+		else
+			sim.remove_device(obj);
+	}
+	} catch (UserInputWrongConfigArg & ex) { QMessageBox messageBox;
+		messageBox.critical(0,"Error","Focused setting is wrong. Please correct.");
+		messageBox.setFixedSize(500,200);
+		return; 
+	} catch (UserInputBadArg & ex) { QMessageBox messageBox;
+		messageBox.critical(0,"Error","Bad argument.");
+		messageBox.setFixedSize(500,200);
+		return;
+	}
 }
 
 void MemSimGui::read_settings()
@@ -77,18 +178,37 @@ void MemSimGui::read_settings()
 	param = QString("assoc");
 	ui->l3assoc->setValue((sim.get_param(obj, param)).toUInt());
 
-	obj = QString("tlb");
+	obj = QString("pt");
 	param = QString("active");
 	ui->tlbcheck->setChecked((sim.get_param(obj, param)).toBool());
-	obj = QString("tlb");
+	obj = QString("pt");
 	param = QString("latency");
 	ui->tlbmiss->setValue((sim.get_param(obj, param)).toUInt());
-	obj = QString("tlb");
-	param = QString("entries");
-	ui->tlbentries->setValue((sim.get_param(obj, param)).toUInt());
-	obj = QString("tlb");
-	param = QString("assoc");
-	ui->tlbassoc->setValue((sim.get_param(obj, param)).toUInt());
+
+	if (sim.has_pg_table()) {
+		obj = QString("tlb");
+		param = QString("active");
+		ui->tlbcheck->setChecked((sim.get_param(obj, param)).toBool());
+		obj = QString("tlb");
+		param = QString("latency");
+		ui->tlbmiss->setValue((sim.get_param(obj, param)).toUInt());
+		obj = QString("tlb");
+		param = QString("entries");
+		ui->tlbentries->setValue((sim.get_param(obj, param)).toUInt());
+		obj = QString("tlb");
+		param = QString("assoc");
+		ui->tlbassoc->setValue((sim.get_param(obj, param)).toUInt());
+
+		obj = QString("swap");
+		param = QString("active");
+		ui->swapcheck->setChecked((sim.get_param(obj, param)).toBool());
+		obj = QString("swap");
+		param = QString("latency");
+		ui->swapmiss->setValue((sim.get_param(obj, param)).toUInt());
+	} else {
+		ui->tlbcheck->setCheckable(false);
+		ui->swapcheck->setCheckable(false);
+	}
 }
 
 void MemSimGui::write_log(const QString & msg)
