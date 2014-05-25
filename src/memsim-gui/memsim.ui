@@ -63,13 +63,6 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
-          <widget class="QRadioButton" name="anoldradio">
-           <property name="text">
-            <string>I a D společné</string>
-           </property>
-          </widget>
-         </item>
          <item row="2" column="0">
           <widget class="QRadioButton" name="neldradio">
            <property name="text">
@@ -199,12 +192,12 @@
          <item row="16" column="0">
           <widget class="QLabel" name="label_10">
            <property name="text">
-            <string>Velikost</string>
+            <string>Položky</string>
            </property>
           </widget>
          </item>
          <item row="16" column="1">
-          <widget class="QSpinBox" name="tlbsize">
+          <widget class="QSpinBox" name="tlbentries">
            <property name="maximum">
             <number>999999999</number>
            </property>
@@ -270,6 +263,13 @@
           <widget class="QPushButton" name="pushButton">
            <property name="text">
             <string>Uložit</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QRadioButton" name="anoldradio">
+           <property name="text">
+            <string>I a D společné</string>
            </property>
           </widget>
          </item>
@@ -339,7 +339,6 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionRun">
    <property name="text">
     <string>R&amp;un</string>

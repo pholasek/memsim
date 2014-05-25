@@ -27,7 +27,6 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QRadioButton>
 #include <QtGui/QSpinBox>
-#include <QtGui/QStatusBar>
 #include <QtGui/QTabWidget>
 #include <QtGui/QToolBar>
 #include <QtGui/QVBoxLayout>
@@ -52,7 +51,6 @@ public:
     QWidget *widget;
     QFormLayout *formLayout;
     QCheckBox *l1check;
-    QRadioButton *anoldradio;
     QRadioButton *neldradio;
     QLabel *label_2;
     QSpinBox *l1miss;
@@ -72,7 +70,7 @@ public:
     QSpinBox *l3assoc;
     QCheckBox *tlbcheck;
     QLabel *label_10;
-    QSpinBox *tlbsize;
+    QSpinBox *tlbentries;
     QLabel *label_11;
     QSpinBox *tlbassoc;
     QLabel *label_5;
@@ -82,6 +80,7 @@ public:
     QSpinBox *l3miss;
     QSpinBox *tlbmiss;
     QPushButton *pushButton;
+    QRadioButton *anoldradio;
     QPlainTextEdit *plainTextEdit;
     QMenuBar *menubar;
     QMenu *menuFile;
@@ -89,7 +88,6 @@ public:
     QMenu *menuSimulation;
     QMenu *menuHelp;
     QToolBar *toolBar;
-    QStatusBar *statusBar;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -146,11 +144,6 @@ public:
         l1check->setObjectName(QString::fromUtf8("l1check"));
 
         formLayout->setWidget(0, QFormLayout::LabelRole, l1check);
-
-        anoldradio = new QRadioButton(frame_2);
-        anoldradio->setObjectName(QString::fromUtf8("anoldradio"));
-
-        formLayout->setWidget(1, QFormLayout::LabelRole, anoldradio);
 
         neldradio = new QRadioButton(frame_2);
         neldradio->setObjectName(QString::fromUtf8("neldradio"));
@@ -254,11 +247,11 @@ public:
 
         formLayout->setWidget(16, QFormLayout::LabelRole, label_10);
 
-        tlbsize = new QSpinBox(frame_2);
-        tlbsize->setObjectName(QString::fromUtf8("tlbsize"));
-        tlbsize->setMaximum(999999999);
+        tlbentries = new QSpinBox(frame_2);
+        tlbentries->setObjectName(QString::fromUtf8("tlbentries"));
+        tlbentries->setMaximum(999999999);
 
-        formLayout->setWidget(16, QFormLayout::FieldRole, tlbsize);
+        formLayout->setWidget(16, QFormLayout::FieldRole, tlbentries);
 
         label_11 = new QLabel(frame_2);
         label_11->setObjectName(QString::fromUtf8("label_11"));
@@ -309,6 +302,11 @@ public:
 
         formLayout->setWidget(18, QFormLayout::LabelRole, pushButton);
 
+        anoldradio = new QRadioButton(frame_2);
+        anoldradio->setObjectName(QString::fromUtf8("anoldradio"));
+
+        formLayout->setWidget(1, QFormLayout::LabelRole, anoldradio);
+
 
         horizontalLayout->addLayout(formLayout);
 
@@ -338,9 +336,6 @@ public:
         toolBar = new QToolBar(MainWindow);
         toolBar->setObjectName(QString::fromUtf8("toolBar"));
         MainWindow->addToolBar(Qt::TopToolBarArea, toolBar);
-        statusBar = new QStatusBar(MainWindow);
-        statusBar->setObjectName(QString::fromUtf8("statusBar"));
-        MainWindow->setStatusBar(statusBar);
 
         menubar->addAction(menuFile->menuAction());
         menubar->addAction(menuEdit->menuAction());
@@ -364,7 +359,6 @@ public:
         action_Settings->setText(QApplication::translate("MainWindow", "&Settings", 0, QApplication::UnicodeUTF8));
         actionRun_stp->setText(QApplication::translate("MainWindow", "Run step", 0, QApplication::UnicodeUTF8));
         l1check->setText(QApplication::translate("MainWindow", "L1", 0, QApplication::UnicodeUTF8));
-        anoldradio->setText(QApplication::translate("MainWindow", "I a D spole\304\215n\303\251", 0, QApplication::UnicodeUTF8));
         neldradio->setText(QApplication::translate("MainWindow", "I a D odd\304\233leny", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("MainWindow", "MissTime", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("MainWindow", "Velikost", 0, QApplication::UnicodeUTF8));
@@ -376,12 +370,13 @@ public:
         label_8->setText(QApplication::translate("MainWindow", "Velikost", 0, QApplication::UnicodeUTF8));
         label_9->setText(QApplication::translate("MainWindow", "Asociativita", 0, QApplication::UnicodeUTF8));
         tlbcheck->setText(QApplication::translate("MainWindow", "TLB", 0, QApplication::UnicodeUTF8));
-        label_10->setText(QApplication::translate("MainWindow", "Velikost", 0, QApplication::UnicodeUTF8));
+        label_10->setText(QApplication::translate("MainWindow", "Polo\305\276ky", 0, QApplication::UnicodeUTF8));
         label_11->setText(QApplication::translate("MainWindow", "Asociativita", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("MainWindow", "MissTime", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "MissTime", 0, QApplication::UnicodeUTF8));
         label_12->setText(QApplication::translate("MainWindow", "MissTime", 0, QApplication::UnicodeUTF8));
         pushButton->setText(QApplication::translate("MainWindow", "Ulo\305\276it", 0, QApplication::UnicodeUTF8));
+        anoldradio->setText(QApplication::translate("MainWindow", "I a D spole\304\215n\303\251", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("MainWindow", "&File", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("MainWindow", "&Edit", 0, QApplication::UnicodeUTF8));
         menuSimulation->setTitle(QApplication::translate("MainWindow", "&Simulation", 0, QApplication::UnicodeUTF8));

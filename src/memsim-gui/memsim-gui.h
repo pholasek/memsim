@@ -28,8 +28,6 @@ public:
 	//! A destructor
 	~MemSimGui();
 
-	//! Writes settings from GUI entities to config
-	void write_settings();
 	//! Read settings to GUI entities from config
 	void read_settings();
 	//! Writes message to QTextBrowser
@@ -42,6 +40,8 @@ protected slots:
 	void load_trace();
 	//! Slot called for simulation of trace
 	void run_trace();
+	//! Writes settings from GUI entities to config
+	void write_settings();
 
 private:
 	Ui::MainWindow * ui;

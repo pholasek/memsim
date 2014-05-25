@@ -135,8 +135,12 @@ void MemSimulation::process_cache(QStringList & groups, QString name)
 		settings->endGroup();
 
 		mem_t type = devs.get_type(name);
-		if (active)
+		if (active) {
+			if ((mem_t) type == L1_D && l1split) {
+				devs.add_cache(L1_I, latency, size, lsize, assoc);
+			}
 			devs.add_cache(type, latency, size, lsize, assoc);
+		}
 		groups.removeAt(groups.indexOf(name));
 	}
 }
@@ -144,7 +148,7 @@ void MemSimulation::process_cache(QStringList & groups, QString name)
 void MemSimulation::process_tlb(QStringList & groups)
 {
 	int latency;
-	unsigned long long entries, entrysize;
+	unsigned long long entries, entrysize, assoc;
 	bool active;
 
 	if (!(groups.filter("tlb").isEmpty()) && devs.has_pg_table()) {
@@ -152,10 +156,12 @@ void MemSimulation::process_tlb(QStringList & groups)
 		latency = settings->value("latency", DEF_TLB_LATENCY).toInt();
 		entries = settings->value("entries", DEF_TLB_ENTRIES).toULongLong();
 		entrysize = settings->value("entrysize", DEF_TLB_ENTRY_SIZE).toULongLong();
+		assoc = settings->value("assoc", DEF_TLB_ASSOC).toULongLong();
 		active = settings->value("active", false).toBool();
 		settings->setValue("latency", latency);
 		settings->setValue("entries", entries);
 		settings->setValue("entrysize", entrysize);
+		settings->setValue("assoc", assoc);
 		settings->setValue("active", active);
 		settings->endGroup();
 
@@ -227,14 +233,27 @@ void MemSimulation::process_pg_table(QStringList & groups)
 	}
 }
 
+void MemSimulation::process_model(QStringList & groups)
+{
+	bool l1split;
+
+	if (!(groups.filter("model").isEmpty())) {
+		settings->beginGroup("model");
+		l1split = settings->value("l1split", DEF_L1SPLIT).toBool();
+		settings->setValue("l1split", l1split);
+		settings->endGroup();
+
+		groups.removeAt(groups.indexOf("model"));
+	}
+}
+
 void MemSimulation::process_settings(QStringList & groups)
 {
+	process_model(groups);
 }
 
 void MemSimulation::process_devices(QStringList & groups)
 {
-	process_cache(groups, QString("l1_i"));
-	process_cache(groups, QString("l1_d"));
 	process_cache(groups, QString("l1"));
 	process_cache(groups, QString("l2"));
 	process_cache(groups, QString("l3"));
@@ -252,8 +271,8 @@ void MemSimulation::init_settings()
 		throw ConfigErrorFileAccess();
 
 	QStringList groups = settings->childGroups();
-	process_devices(groups); //! Process device hierarchy related settings
 	process_settings(groups); //! Process other settings
+	process_devices(groups); //! Process device hierarchy related settings
 	settings->sync();
 }
 
@@ -361,6 +380,10 @@ void MemSimulation::sim_trace(MemTrace & trace)
 	trace.reset_trace();
 }
 
+void MemSimulation::valid_cfg_param(type, QString & param, quint64 value)
+{
+}
+
 void MemSimulation::set_cfg_param(QString & object, QString & param, QString & value)
 {
 	mem_t type = devs.get_type(object);
@@ -415,7 +438,20 @@ void MemSimulation::add_device(QString & name)
 
 	switch (type) {
 		case L1_D:
-		case L1_I:
+			settings->beginGroup("l1");
+			latency = settings->value("latency", DEF_CACHE_LATENCY).toUInt();
+			size = settings->value("size", DEF_CACHE_SIZE).toUInt();
+			lsize = settings->value("lsize", DEF_CACHE_LSIZE).toUInt();
+			assoc = settings->value("assoc", DEF_CACHE_ASSOC).toUInt();
+			if (l1split)
+				devs.add_cache(L1_I,latency,size,lsize,assoc);
+			devs.add_cache(L1_D,latency,size,lsize,assoc);
+			settings->setValue("latency", latency);
+			settings->setValue("size", size);
+			settings->setValue("lsize", lsize);
+			settings->setValue("assoc", assoc);
+			settings->endGroup();
+			break;
 		case L2:
 		case L3:
 			settings->beginGroup(name);
@@ -452,11 +488,11 @@ void MemSimulation::add_device(QString & name)
 			settings->beginGroup("tlb");
 			latency = settings->value("latency", DEF_TLB_LATENCY).toUInt();
 			entries = settings->value("entries", DEF_TLB_ENTRIES).toUInt();
-			entrysize = settings->value("entrysize", DEF_TLB_ENTRY_SIZE).toUInt();
-			devs.add_tlb(entries, entrysize, latency);
+			assoc = settings->value("assoc", DEF_TLB_ASSOC).toUInt();
+			devs.add_tlb(entries, 8, latency);
 			settings->setValue("latency", latency);
 			settings->setValue("entries", entries);
-			settings->setValue("entrysize", entrysize);
+			settings->setValue("assoc", assoc);
 			settings->endGroup();
 			break;
 		case PT:
@@ -482,7 +518,9 @@ void MemSimulation::remove_device(QString & name)
 
 	switch (type) {
 		case L1_D:
-		case L1_I:
+			if (l1split)
+				devs.delete_cache(L1_I,NULL);
+			devs.delete_cache(L1_D,NULL);
 		case L2:
 		case L3:
 			devs.delete_cache(type, NULL);

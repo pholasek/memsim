@@ -41,7 +41,7 @@ enum mem_t {
 	SWAP, /*< Swap device */
 	TLB, /*< TLB */
 	PT, /*< Page table */
-	GENERIC /*< Other (generic) device */
+	GENERIC /*< Other (generic) device, i.e. model */
 };
 
 class MemDeviceCache;

@@ -72,6 +72,11 @@ class MemTrace
 	    //! trace in model form.
             QStringList trace_model;
 	    //! Function for parsing trace line.
+	    /*!
+	     * Function uses QRegExp class for verification of the line.
+	     *
+	     * \param[in] line Input line
+	     */
             void process_line(QString line);
 	    //! Trace pointer.
 	    trace_it it;

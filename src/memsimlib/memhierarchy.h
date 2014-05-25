@@ -21,6 +21,7 @@ const int dev_num = 8;
 //! Max number of possible caches in simulation model.
 const int cache_num = 3;
 
+//! Model devices constants
 const quint64 DEF_CACHE_LATENCY = 11;
 const quint64 DEF_CACHE_SIZE = 32768;
 const quint64 DEF_CACHE_LSIZE = 8;
@@ -30,9 +31,13 @@ const quint64 DEF_SWAP_LATENCY = 1;
 const quint64 DEF_TLB_LATENCY = 1;
 const quint64 DEF_TLB_ENTRY_SIZE = sizeof(unsigned long int);
 const quint64 DEF_TLB_ENTRIES = 150;
+const quint64 DEF_TLB_ASSOC = 4;
 const quint64 DEF_PT_DEPTH = 4;
 const quint64 DEF_PT_LATENCY = 4;
 const quint64 DEF_PAGE_SIZE = 4096;
+
+//! Model settings constants
+const bool DEF_L1SPLIT = false;
 
 //! This class providing access to simulation model of memory hierarchy.
 class MemHierarchy

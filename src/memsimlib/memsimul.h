@@ -93,6 +93,8 @@ class MemSimulation
 		 * \return Calendar statistics
 		 */
 		QString show_calendstats();
+		//! Set split of L1 cache
+		void set_l1split(bool val) { l1split = val; }
         private:
 		//! Process single trace line
 		/*
@@ -122,6 +124,8 @@ class MemSimulation
 		void process_devices(QStringList & groups);
 		//! Set other attributes of simulator to existing settings.
 		void process_settings(QStringList & groups);
+		//! Set other model settings
+		void process_model(QStringList & groups);
 		//! Init settings.
 		void init_settings();
 		//! State of the simulation.
@@ -132,6 +136,8 @@ class MemSimulation
 		MemHierarchy devs;
 		//! Simulator settings.
 		QSettings *settings;
+		//! L1 split
+		bool l1split;
 };
 
 #endif

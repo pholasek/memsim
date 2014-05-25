@@ -12,6 +12,7 @@ MemSimGui::MemSimGui(QWidget *parent) : QMainWindow(parent)
 	ui->setupUi(this);
 	connect(ui->action_Load_File, SIGNAL(triggered()), this, SLOT(load_trace()));
 	connect(ui->actionRun, SIGNAL(triggered()), this, SLOT(run_trace()));
+	connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(write_settings()));
 
 	sim.load_configuration();
 	read_settings();
@@ -30,7 +31,25 @@ void MemSimGui::read_settings()
 {
 	QString obj, param;
 
-	//TODO L1!
+	obj = QString("model");
+	param = QString("l1split");
+	if ((sim.get_param(obj, param)).toBool())
+		ui->neldradio->click();
+	else
+		ui->anoldradio->click();
+
+	obj = QString("l1");
+	param = QString("active");
+	ui->l1check->setChecked((sim.get_param(obj, param)).toBool());
+	obj = QString("l1");
+	param = QString("latency");
+	ui->l1miss->setValue((sim.get_param(obj, param)).toUInt());
+	obj = QString("l1");
+	param = QString("size");
+	ui->l1size->setValue((sim.get_param(obj, param)).toUInt());
+	obj = QString("l1");
+	param = QString("assoc");
+	ui->l1assoc->setValue((sim.get_param(obj, param)).toUInt());
 
 	obj = QString("l2");
 	param = QString("active");
@@ -38,7 +57,6 @@ void MemSimGui::read_settings()
 	obj = QString("l2");
 	param = QString("latency");
 	ui->l2miss->setValue((sim.get_param(obj, param)).toUInt());
-	qDebug() << sim.get_param(obj,param).toUInt();
 	obj = QString("l2");
 	param = QString("size");
 	ui->l2size->setValue((sim.get_param(obj, param)).toUInt());
@@ -52,7 +70,6 @@ void MemSimGui::read_settings()
 	obj = QString("l3");
 	param = QString("latency");
 	ui->l3miss->setValue((sim.get_param(obj, param)).toUInt());
-	qDebug() << sim.get_param(obj,param).toUInt();
 	obj = QString("l3");
 	param = QString("size");
 	ui->l3size->setValue((sim.get_param(obj, param)).toUInt());
@@ -66,10 +83,9 @@ void MemSimGui::read_settings()
 	obj = QString("tlb");
 	param = QString("latency");
 	ui->tlbmiss->setValue((sim.get_param(obj, param)).toUInt());
-	qDebug() << sim.get_param(obj,param).toUInt();
 	obj = QString("tlb");
-	param = QString("size");
-	ui->tlbsize->setValue((sim.get_param(obj, param)).toUInt());
+	param = QString("entries");
+	ui->tlbentries->setValue((sim.get_param(obj, param)).toUInt());
 	obj = QString("tlb");
 	param = QString("assoc");
 	ui->tlbassoc->setValue((sim.get_param(obj, param)).toUInt());
@@ -100,15 +116,21 @@ void MemSimGui::load_trace()
 			ret = sim.load_trace(filename);
 		} catch (TraceIOFile &ex) { 
 			QMessageBox messageBox;
-			messageBox.critical(0,"Error","Soubor trace se nepodařilo načíst.");
+			messageBox.critical(0,"Error","Unable to open the file.");
 			messageBox.setFixedSize(500,200);
+			return;
+		} catch (TraceIOLine &ex) { 
+			QMessageBox messageBox;
+			messageBox.critical(0,"Error","Wrong trace file format.");
+			messageBox.setFixedSize(500,200);
+			return;
 		}
+		ui->tabWidget->insertTab(ret, new QListView, filename);
+		ui->tabWidget->setCurrentIndex(ret);
+		QListView * tv = qobject_cast<QListView*>(ui->tabWidget->currentWidget());
+		tv->setModel(sim.dump_trace(ret));
+		write_log(QString("Successfully loaded trace id %1.").arg(ret));
 	}
-	ui->tabWidget->insertTab(ret, new QListView, filename);
-	ui->tabWidget->setCurrentIndex(ret);
-	QListView * tv = qobject_cast<QListView*>(ui->tabWidget->currentWidget());
-	tv->setModel(sim.dump_trace(ret));
-	write_log(QString("Successfully loaded trace id %1.").arg(ret));
 }
 
 int main(int argc, char *argv[])

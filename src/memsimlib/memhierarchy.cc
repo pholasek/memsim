@@ -13,8 +13,6 @@
 //! Constructor && destructor
 MemHierarchy::MemHierarchy() :  sim_dev(NULL), first_inst(NULL), first_data(NULL), last_dev(NULL), l1_i(NULL), l1_d(NULL), l2(NULL), l3(NULL), ram(NULL), swap(NULL), tlb(NULL), pg_table(NULL)
 {
-	name2type.insert("l1_i", L1_I);
-	name2type.insert("l1_d", L1_D);
 	name2type.insert("l1", L1_D);
 	name2type.insert("l2", L2);
 	name2type.insert("l3", L3);
@@ -22,8 +20,7 @@ MemHierarchy::MemHierarchy() :  sim_dev(NULL), first_inst(NULL), first_data(NULL
 	name2type.insert("swap", SWAP);
 	name2type.insert("tlb", TLB);
 	name2type.insert("pt", PT);
-	type2name.insert(L1_I, "l1_i");
-	type2name.insert(L1_D, "l1_d");
+	name2type.insert("model", GENERIC);
 	type2name.insert(L1_D, "l1");
 	type2name.insert(L2, "l2");
 	type2name.insert(L3, "l3");
@@ -31,6 +28,7 @@ MemHierarchy::MemHierarchy() :  sim_dev(NULL), first_inst(NULL), first_data(NULL
 	type2name.insert(SWAP, "swap");
 	type2name.insert(TLB, "tlb");
 	type2name.insert(PT, "pt");
+	type2name.insert(GENERIC, "model");
 }
 
 MemHierarchy::~MemHierarchy()
