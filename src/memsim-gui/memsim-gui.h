@@ -28,6 +28,10 @@ public:
 	//! A destructor
 	~MemSimGui();
 
+	//! Writes settings from GUI entities to config
+	void write_settings();
+	//! Read settings to GUI entities from config
+	void read_settings();
 	//! Writes message to QTextBrowser
 	/*!
 	 * \param[in] msg Message to write

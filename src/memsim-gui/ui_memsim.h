@@ -24,6 +24,7 @@
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
 #include <QtGui/QPlainTextEdit>
+#include <QtGui/QPushButton>
 #include <QtGui/QRadioButton>
 #include <QtGui/QSpinBox>
 #include <QtGui/QStatusBar>
@@ -80,6 +81,7 @@ public:
     QSpinBox *l2miss;
     QSpinBox *l3miss;
     QSpinBox *tlbmiss;
+    QPushButton *pushButton;
     QPlainTextEdit *plainTextEdit;
     QMenuBar *menubar;
     QMenu *menuFile;
@@ -162,6 +164,7 @@ public:
 
         l1miss = new QSpinBox(frame_2);
         l1miss->setObjectName(QString::fromUtf8("l1miss"));
+        l1miss->setMaximum(999999999);
 
         formLayout->setWidget(3, QFormLayout::FieldRole, l1miss);
 
@@ -172,6 +175,7 @@ public:
 
         l1size = new QSpinBox(frame_2);
         l1size->setObjectName(QString::fromUtf8("l1size"));
+        l1size->setMaximum(999999999);
 
         formLayout->setWidget(4, QFormLayout::FieldRole, l1size);
 
@@ -182,6 +186,7 @@ public:
 
         l1assoc = new QSpinBox(frame_2);
         l1assoc->setObjectName(QString::fromUtf8("l1assoc"));
+        l1assoc->setMaximum(999999999);
 
         formLayout->setWidget(5, QFormLayout::FieldRole, l1assoc);
 
@@ -197,6 +202,7 @@ public:
 
         l2size = new QSpinBox(frame_2);
         l2size->setObjectName(QString::fromUtf8("l2size"));
+        l2size->setMaximum(999999999);
 
         formLayout->setWidget(8, QFormLayout::FieldRole, l2size);
 
@@ -207,6 +213,7 @@ public:
 
         l2assoc = new QSpinBox(frame_2);
         l2assoc->setObjectName(QString::fromUtf8("l2assoc"));
+        l2assoc->setMaximum(999999999);
 
         formLayout->setWidget(9, QFormLayout::FieldRole, l2assoc);
 
@@ -222,6 +229,7 @@ public:
 
         l3size = new QSpinBox(frame_2);
         l3size->setObjectName(QString::fromUtf8("l3size"));
+        l3size->setMaximum(999999999);
 
         formLayout->setWidget(12, QFormLayout::FieldRole, l3size);
 
@@ -232,6 +240,7 @@ public:
 
         l3assoc = new QSpinBox(frame_2);
         l3assoc->setObjectName(QString::fromUtf8("l3assoc"));
+        l3assoc->setMaximum(999999999);
 
         formLayout->setWidget(13, QFormLayout::FieldRole, l3assoc);
 
@@ -247,6 +256,7 @@ public:
 
         tlbsize = new QSpinBox(frame_2);
         tlbsize->setObjectName(QString::fromUtf8("tlbsize"));
+        tlbsize->setMaximum(999999999);
 
         formLayout->setWidget(16, QFormLayout::FieldRole, tlbsize);
 
@@ -257,6 +267,7 @@ public:
 
         tlbassoc = new QSpinBox(frame_2);
         tlbassoc->setObjectName(QString::fromUtf8("tlbassoc"));
+        tlbassoc->setMaximum(999999999);
 
         formLayout->setWidget(17, QFormLayout::FieldRole, tlbassoc);
 
@@ -277,18 +288,26 @@ public:
 
         l2miss = new QSpinBox(frame_2);
         l2miss->setObjectName(QString::fromUtf8("l2miss"));
+        l2miss->setMaximum(999999999);
 
         formLayout->setWidget(7, QFormLayout::FieldRole, l2miss);
 
         l3miss = new QSpinBox(frame_2);
         l3miss->setObjectName(QString::fromUtf8("l3miss"));
+        l3miss->setMaximum(999999999);
 
         formLayout->setWidget(11, QFormLayout::FieldRole, l3miss);
 
         tlbmiss = new QSpinBox(frame_2);
         tlbmiss->setObjectName(QString::fromUtf8("tlbmiss"));
+        tlbmiss->setMaximum(999999999);
 
         formLayout->setWidget(15, QFormLayout::FieldRole, tlbmiss);
+
+        pushButton = new QPushButton(frame_2);
+        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+
+        formLayout->setWidget(18, QFormLayout::LabelRole, pushButton);
 
 
         horizontalLayout->addLayout(formLayout);
@@ -340,7 +359,7 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MemSim", 0, QApplication::UnicodeUTF8));
-        actionRun->setText(QApplication::translate("MainWindow", "Run", 0, QApplication::UnicodeUTF8));
+        actionRun->setText(QApplication::translate("MainWindow", "R&un", 0, QApplication::UnicodeUTF8));
         action_Load_File->setText(QApplication::translate("MainWindow", "&Load File", 0, QApplication::UnicodeUTF8));
         action_Settings->setText(QApplication::translate("MainWindow", "&Settings", 0, QApplication::UnicodeUTF8));
         actionRun_stp->setText(QApplication::translate("MainWindow", "Run step", 0, QApplication::UnicodeUTF8));
@@ -362,6 +381,7 @@ public:
         label_5->setText(QApplication::translate("MainWindow", "MissTime", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "MissTime", 0, QApplication::UnicodeUTF8));
         label_12->setText(QApplication::translate("MainWindow", "MissTime", 0, QApplication::UnicodeUTF8));
+        pushButton->setText(QApplication::translate("MainWindow", "Ulo\305\276it", 0, QApplication::UnicodeUTF8));
         menuFile->setTitle(QApplication::translate("MainWindow", "&File", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("MainWindow", "&Edit", 0, QApplication::UnicodeUTF8));
         menuSimulation->setTitle(QApplication::translate("MainWindow", "&Simulation", 0, QApplication::UnicodeUTF8));

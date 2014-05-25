@@ -14,11 +14,65 @@ MemSimGui::MemSimGui(QWidget *parent) : QMainWindow(parent)
 	connect(ui->actionRun, SIGNAL(triggered()), this, SLOT(run_trace()));
 
 	sim.load_configuration();
+	read_settings();
 }
 
 MemSimGui::~MemSimGui()
 {
 	delete ui;
+}
+
+void MemSimGui::write_settings()
+{
+}
+
+void MemSimGui::read_settings()
+{
+	QString obj, param;
+
+	//TODO L1!
+
+	obj = QString("l2");
+	param = QString("active");
+	ui->l2check->setChecked((sim.get_param(obj, param)).toBool());
+	obj = QString("l2");
+	param = QString("latency");
+	ui->l2miss->setValue((sim.get_param(obj, param)).toUInt());
+	qDebug() << sim.get_param(obj,param).toUInt();
+	obj = QString("l2");
+	param = QString("size");
+	ui->l2size->setValue((sim.get_param(obj, param)).toUInt());
+	obj = QString("l2");
+	param = QString("assoc");
+	ui->l2assoc->setValue((sim.get_param(obj, param)).toUInt());
+
+	obj = QString("l3");
+	param = QString("active");
+	ui->l3check->setChecked((sim.get_param(obj, param)).toBool());
+	obj = QString("l3");
+	param = QString("latency");
+	ui->l3miss->setValue((sim.get_param(obj, param)).toUInt());
+	qDebug() << sim.get_param(obj,param).toUInt();
+	obj = QString("l3");
+	param = QString("size");
+	ui->l3size->setValue((sim.get_param(obj, param)).toUInt());
+	obj = QString("l3");
+	param = QString("assoc");
+	ui->l3assoc->setValue((sim.get_param(obj, param)).toUInt());
+
+	obj = QString("tlb");
+	param = QString("active");
+	ui->tlbcheck->setChecked((sim.get_param(obj, param)).toBool());
+	obj = QString("tlb");
+	param = QString("latency");
+	ui->tlbmiss->setValue((sim.get_param(obj, param)).toUInt());
+	qDebug() << sim.get_param(obj,param).toUInt();
+	obj = QString("tlb");
+	param = QString("size");
+	ui->tlbsize->setValue((sim.get_param(obj, param)).toUInt());
+	obj = QString("tlb");
+	param = QString("assoc");
+	ui->tlbassoc->setValue((sim.get_param(obj, param)).toUInt());
 }
 
 void MemSimGui::write_log(const QString & msg)

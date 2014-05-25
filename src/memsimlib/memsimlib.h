@@ -104,6 +104,13 @@ class MEMSIMLIB_EXPORT MemSimulationObj
 	 * \param[in] value new value of parameter of object
 	 */
 	void config_param(QString & object, QString & param, QString & value);
+	//! Get given parameter of the simulation
+	/*!
+	 * \param[in] object object of memory hierarchy described by name
+	 * \param[in] param parameter of object to configure
+	 * \return QVarint value of parameter
+	 */
+	QVariant get_param(QString & object, QString & param);
 	//! Add device to model
 	/*!
 	 * \param[in] name Name of the device for adding

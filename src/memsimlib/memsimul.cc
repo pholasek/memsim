@@ -46,6 +46,11 @@ void MemSimulationObj::config_param(QString & object, QString & param, QString &
 	obj->set_cfg_param(object, param, value);
 }
 
+QVariant MemSimulationObj::get_param(QString & object, QString & param)
+{
+	return obj->get_cfg_param(object, param);
+}
+
 void MemSimulationObj::load_configuration(void)
 {
 	obj->init_memsim();
@@ -112,7 +117,7 @@ MemSimulation::~MemSimulation()
 void MemSimulation::process_cache(QStringList & groups, QString name)
 {
 	int latency;
-	long size, lsize, assoc;
+	unsigned long long size, lsize, assoc;
 	bool active;
 
 	if (!(groups.filter(name).isEmpty())) {
@@ -122,6 +127,11 @@ void MemSimulation::process_cache(QStringList & groups, QString name)
 		lsize = settings->value("lsize", DEF_CACHE_LSIZE).toULongLong();
 		assoc = settings->value("assoc", DEF_CACHE_ASSOC).toULongLong();
 		active = settings->value("active", false).toBool();
+		settings->setValue("latency", latency);
+		settings->setValue("size", size);
+		settings->setValue("lsize", lsize);
+		settings->setValue("assoc", assoc);
+		settings->setValue("active", active);
 		settings->endGroup();
 
 		mem_t type = devs.get_type(name);
@@ -134,7 +144,7 @@ void MemSimulation::process_cache(QStringList & groups, QString name)
 void MemSimulation::process_tlb(QStringList & groups)
 {
 	int latency;
-	long entries, entrysize;
+	unsigned long long entries, entrysize;
 	bool active;
 
 	if (!(groups.filter("tlb").isEmpty()) && devs.has_pg_table()) {
@@ -143,6 +153,10 @@ void MemSimulation::process_tlb(QStringList & groups)
 		entries = settings->value("entries", DEF_TLB_ENTRIES).toULongLong();
 		entrysize = settings->value("entrysize", DEF_TLB_ENTRY_SIZE).toULongLong();
 		active = settings->value("active", false).toBool();
+		settings->setValue("latency", latency);
+		settings->setValue("entries", entries);
+		settings->setValue("entrysize", entrysize);
+		settings->setValue("active", active);
 		settings->endGroup();
 
 		if (active)
@@ -161,6 +175,8 @@ void MemSimulation::process_ram(QStringList & groups)
 		settings->beginGroup("ram");
 		latency = settings->value("latency", DEF_RAM_LATENCY).toInt();
 		active = settings->value("active", false).toBool();
+		settings->setValue("latency", latency);
+		settings->setValue("active", active);
 		settings->endGroup();
 
 		if (active)
@@ -179,6 +195,8 @@ void MemSimulation::process_swap(QStringList & groups)
 		settings->beginGroup("swap");
 		latency = settings->value("latency", DEF_SWAP_LATENCY).toInt();
 		active = settings->value("active", false).toBool();
+		settings->setValue("latency", latency);
+		settings->setValue("active", active);
 		settings->endGroup();
 
 		if (active)
@@ -190,7 +208,7 @@ void MemSimulation::process_swap(QStringList & groups)
 void MemSimulation::process_pg_table(QStringList & groups)
 {
 	int latency;
-	long depth;
+	unsigned long long depth;
 	bool active;
 
 	if (!(groups.filter("pt").isEmpty())) {
@@ -198,6 +216,9 @@ void MemSimulation::process_pg_table(QStringList & groups)
 		latency = settings->value("latency", DEF_PT_LATENCY).toInt();
 		depth = settings->value("depth", DEF_PT_DEPTH).toULongLong();
 		active = settings->value("active", false).toBool();
+		settings->setValue("latency", latency);
+		settings->setValue("depth", depth);
+		settings->setValue("active", active);
 		settings->endGroup();
 
 		if (active)
@@ -221,7 +242,6 @@ void MemSimulation::process_devices(QStringList & groups)
 	process_pg_table(groups);
 	process_swap(groups);
 	process_tlb(groups);
-	settings->sync();
 	//devs.commit_changes();
 }
 
@@ -234,6 +254,7 @@ void MemSimulation::init_settings()
 	QStringList groups = settings->childGroups();
 	process_devices(groups); //! Process device hierarchy related settings
 	process_settings(groups); //! Process other settings
+	settings->sync();
 }
 
 void MemSimulation::init_memsim()
@@ -376,17 +397,21 @@ void MemSimulation::set_cfg_param(QString & object, QString & param, QString & v
 
 QVariant MemSimulation::get_cfg_param(QString & object, QString & param)
 {
+	QVariant val;
+
+	settings->sync();
 	settings->beginGroup(object);
 	if (settings->contains(param))
-		return settings->value(param);
+		val = settings->value(param);
 	settings->endGroup();
 
-	return QVariant(); //! Return invalid QVariant if parameter wouldn't exist.
+	return val; //! Return invalid QVariant if parameter wouldn't exist.
 }
 
 void MemSimulation::add_device(QString & name)
 {
 	mem_t type = devs.get_type(name);
+	unsigned long long size, lsize, assoc, latency, entries, entrysize, depth;
 
 	switch (type) {
 		case L1_D:
@@ -394,38 +419,53 @@ void MemSimulation::add_device(QString & name)
 		case L2:
 		case L3:
 			settings->beginGroup(name);
-			devs.add_cache(type,
-					settings->value("latency", DEF_CACHE_LATENCY).toUInt(),
-					settings->value("size", DEF_CACHE_SIZE).toUInt(),
-					settings->value("lsize", DEF_CACHE_LSIZE).toUInt(),
-					settings->value("assoc", DEF_CACHE_ASSOC).toUInt());
+			latency = settings->value("latency", DEF_CACHE_LATENCY).toUInt();
+			size = settings->value("size", DEF_CACHE_SIZE).toUInt();
+			lsize = settings->value("lsize", DEF_CACHE_LSIZE).toUInt();
+			assoc = settings->value("assoc", DEF_CACHE_ASSOC).toUInt();
+			devs.add_cache(type,latency,size,lsize,assoc);
+			settings->setValue("latency", latency);
+			settings->setValue("size", size);
+			settings->setValue("lsize", lsize);
+			settings->setValue("assoc", assoc);
 			settings->endGroup();
 			break;
 		case RAM:
 			settings->beginGroup("ram");
-			devs.add_ram(settings->value("latency", DEF_RAM_LATENCY).toUInt());
+			latency = settings->value("latency", DEF_RAM_LATENCY).toUInt();
+			devs.add_ram(latency);
+			settings->setValue("latency", latency);
 			settings->endGroup();
 			break;
 		case SWAP:
 			if (!devs.has_pg_table())
 				throw ConfigErrorNoPageTable();
 			settings->beginGroup("swap");
-			devs.add_swap(settings->value("latency", DEF_SWAP_LATENCY).toUInt());
+			latency = settings->value("latency", DEF_SWAP_LATENCY).toUInt();
+			devs.add_swap(latency);
+			settings->setValue("latency", latency);
 			settings->endGroup();
 			break;
 		case TLB:
 			if (!devs.has_pg_table())
 				throw ConfigErrorNoPageTable();
 			settings->beginGroup("tlb");
-			devs.add_tlb(settings->value("entries", DEF_TLB_ENTRIES).toUInt(),
-					settings->value("entrysize", DEF_TLB_ENTRY_SIZE).toUInt(),
-					settings->value("latency", DEF_TLB_LATENCY).toUInt());
+			latency = settings->value("latency", DEF_TLB_LATENCY).toUInt();
+			entries = settings->value("entries", DEF_TLB_ENTRIES).toUInt();
+			entrysize = settings->value("entrysize", DEF_TLB_ENTRY_SIZE).toUInt();
+			devs.add_tlb(entries, entrysize, latency);
+			settings->setValue("latency", latency);
+			settings->setValue("entries", entries);
+			settings->setValue("entrysize", entrysize);
 			settings->endGroup();
 			break;
 		case PT:
 			settings->beginGroup("pt");
-			devs.add_page_table(settings->value("depth", DEF_PT_DEPTH).toUInt(),
-					settings->value("latency", DEF_PT_LATENCY).toUInt());
+			latency = settings->value("latency", DEF_PT_LATENCY).toUInt();
+			latency = settings->value("depth", DEF_PT_DEPTH).toUInt();
+			devs.add_page_table(depth, latency);
+			settings->setValue("latency", latency);
+			settings->setValue("depth", depth);
 			settings->endGroup();
 			break;
 		default:
