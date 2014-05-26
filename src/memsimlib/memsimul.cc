@@ -13,11 +13,11 @@
 //!
 // Interface class implementation
 
-MemSimulationObj::MemSimulationObj() : obj(new ::MemSimulation()), trace_id(0) { 
+MemSimulationObj::MemSimulationObj() : obj(MemSimulation::get_instance()), trace_id(0) { 
 	load_configuration();
 }
 
-MemSimulationObj::~MemSimulationObj() { delete obj; }
+MemSimulationObj::~MemSimulationObj() {}
 
 int MemSimulationObj::load_trace(QString & path)
 {
@@ -36,24 +36,24 @@ int MemSimulationObj::run_trace(int id)
 	if (!traces.contains(id))
 		throw UserInputBadTraceId();
 
-	obj->sim_trace(*(traces.value(id)->obj));
+	obj.sim_trace(*(traces.value(id)->obj));
 
 	return 0;
 }
 
 void MemSimulationObj::config_param(QString & object, QString & param, QString value)
 {
-	obj->set_cfg_param(object, param, value);
+	obj.set_cfg_param(object, param, value);
 }
 
 QVariant MemSimulationObj::get_param(QString & object, QString & param)
 {
-	return obj->get_cfg_param(object, param);
+	return obj.get_cfg_param(object, param);
 }
 
 void MemSimulationObj::load_configuration(void)
 {
-	obj->init_memsim();
+	obj.init_memsim();
 }
 
 QString MemSimulationObj::show_traces(void)
@@ -71,7 +71,7 @@ QString MemSimulationObj::show_traces(void)
 
 QString MemSimulationObj::show_hierarchy(void)
 {
-	return obj->show_devs();
+	return obj.show_devs();
 }
 
 QString MemSimulationObj::show_stats(void)
@@ -81,17 +81,17 @@ QString MemSimulationObj::show_stats(void)
 
 QString MemSimulationObj::show_statsall(void)
 {
-	return obj->show_calendstats() + obj->show_statsall();
+	return obj.show_calendstats() + obj.show_statsall();
 }
 
 void MemSimulationObj::add_device(QString & name)
 {
-	obj->add_device(name);
+	obj.add_device(name);
 }
 
 void MemSimulationObj::remove_device(QString & name)
 {
-	obj->remove_device(name);
+	obj.remove_device(name);
 }
 
 QStringListModel *MemSimulationObj::dump_trace(int idx)
@@ -101,15 +101,14 @@ QStringListModel *MemSimulationObj::dump_trace(int idx)
 
 bool MemSimulationObj::has_pg_table()
 {
-	return obj->has_pg_table();
+	return obj.has_pg_table();
 }
 
 void MemSimulationObj::set_l1split(bool val)
 {
-	obj->set_l1split(val);
+	obj.set_l1split(val);
 }
 //! Constructor
-//TODO settings in constructor CPUID recognize
 MemSimulation::MemSimulation() : settings(new QSettings("MemSim", "memsim"))
 {
 	this->state = STOP;

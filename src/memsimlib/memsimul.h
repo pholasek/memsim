@@ -26,8 +26,11 @@ class MemTrace;
 class MemSimulation
 {
         public:
-		//! A constructor.
-                MemSimulation();
+		//! Singleton "constructor"
+		static MemSimulation& get_instance() {
+			static MemSimulation instance;
+			return instance;
+		}
 		//! A destructor.
                 ~MemSimulation();
 		//! Initialize simulator.
@@ -98,6 +101,11 @@ class MemSimulation
 		//! Return state of pg_table
 		bool has_pg_table() { return devs.has_pg_table(); }
         private:
+		//! A constructor. It is private due to Singleton design pattern.
+                MemSimulation();
+		//! Stop the compiler generating methods of copy the object
+		MemSimulation(MemSimulation const & copy);
+		MemSimulation & operator=(MemSimulation const & copy);
 		//! Valid corectness of config parameter
 		/*!
 		 * \param[in] type mem_t object

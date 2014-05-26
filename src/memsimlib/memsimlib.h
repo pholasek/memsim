@@ -152,7 +152,7 @@ class MEMSIMLIB_EXPORT MemSimulationObj
 	/*!
 	 * \sa ::MemSimulation
 	 */
-	::MemSimulation *obj;
+	::MemSimulation & obj;
 	//! Traces loaded into simulator
 	QMap<int, QSharedPointer<MemTraceObj> > traces;
 	//! Paths of trace files
