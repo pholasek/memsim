@@ -1,0 +1,38 @@
+Validace simulatoru
+===================
+
+* kody algoritmu:
+	- quicksort.c
+	- matrix_good.c - optimalni nasobeni matic
+	- matrix_bad.c - neoptimalni nasobeni matic
+
+Makefile je pripraven.
+Argument prikazove radky znaci pocet prvni v poli nebo dimenzi matice.
+
+* Ziskani pametove stopy pomoci pluginu lackey (je nutne mit nainstalovan valgrind):
+
+$ ./lackey_clean.sh ./quicksort N
+
+skript vytvori pametovou stopu, procisti a vysledek ulozi ve tvaru quicksort.N.lackey.out
+
+Tato stopa muze byt dale pouzita v simulatoru, napr.
+memsim>load ./quicksort.100.lackey.out
+Trace id: 0
+memsim>run 0
+memsin>show statsall
+
+* Ziskani statistik pomoci toolu perf:
+
+Je nutne mit kernel cca 3.10+.
+
+$ perf stat --event=L1-dcache-loads-misses,L1-dcache-loads,L1-dcache-store-misses,L1-dcache-stores,LLC-loads,LLC-loads-misses,cpu-clock,cycles ./matrix_bad 1000
+
+nebo
+
+$ perf mem -C0 record taskset 0x1 ./matrix_bad 1000
+
+a pote
+
+$ perf mem -C0 report
+
+

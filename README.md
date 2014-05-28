@@ -16,6 +16,9 @@ library interface is exported via MemSimulationObj class
 commands:
 - `load <path>` - load trace with given path
 - `run <id>` - run simulation of trace with id
+- `add <dev>` - add device
+- `remove <dev>` - remove device
+- `config <dev> <param> <val>` - config device
 - `show traces` - show all loaded traces
 - `show devices` - show configured devices
 - `show statsall` - show stats of all devices
