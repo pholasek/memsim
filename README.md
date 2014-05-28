@@ -1,5 +1,7 @@
 # MemSim - Memory hierarchy simulator
 
+https://github.com/pholasek/memsim.git
+
 ## Components
 
 - library: memsimlib.so
@@ -27,6 +29,8 @@ commands:
 `make run-gui`
 
 ## Use
+
+Sample traces are situated in test/trace{1,2,3}.trc
 
 `memsim> add l1_i`
 `memsim> add l1_d`
