@@ -71,7 +71,7 @@ int MemTrace::get_size()
 //! Method for filling of lines
 void MemTrace::process_line(QString line)
 {
-	QRegExp re(" *[L|S|I] *[0-9a-f]+,[0-9]{1}$");
+	QRegExp re(" *[L|S|I] *[0-9a-f]+,[0-9]+$");
 	if (!re.exactMatch(line))
 		throw TraceIOLine();
 
