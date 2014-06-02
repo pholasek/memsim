@@ -134,6 +134,8 @@ void MemSimCli::process_command(int cmd, QStringList & args)
 		out << ex.what() << " non-existing trace ID.";
 	} catch (const UserInputBadArg &ex) {
 		out << ex.what() << " Wrong input argument.";
+	} catch (const UserInputWrongConfigArg &ex) {
+		out << ex.what() << QString(" Value %1 of parameter %2 is wrong.").arg(ex.value).arg(ex.param).constData();
 	} catch (const MemErrorAlloc &ex) {
 		out << ex.what() << " Allocation error.";
 	} catch (const ConfigErrorFileAccess &ex) {

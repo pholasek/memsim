@@ -29,7 +29,13 @@ class UserInputBadTraceId : public UserInput {};
 
 class UserInputBadArg : public UserInput {};
 
-class UserInputWrongConfigArg : public UserInput {};
+class UserInputWrongConfigArg : public UserInput {
+	public:
+		UserInputWrongConfigArg(QString param, quint64 value) : param(param), value(value) {}
+		~UserInputWrongConfigArg() throw() {};
+		QString param;
+		quint64 value;
+};
 
 class MemError : public std::runtime_error {
 	public:

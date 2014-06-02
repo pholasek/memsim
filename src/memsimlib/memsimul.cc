@@ -423,14 +423,15 @@ void MemSimulation::valid_cfg_param(mem_t type, QString & param, quint64 value)
 		case TLB:
 			//if (param != "latency" && (log2l(value)) - trunc(log2l(value)) > 0.0) {
 				//qDebug() << param << trunc(log2l(value));
-				//throw UserInputWrongConfigArg();
+			//	throw UserInputWrongConfigArg();
 			//}
+			if (param == "assoc" && value > 64)
+				throw UserInputWrongConfigArg(param, value);
 		case RAM:
 		case SWAP:
 		case PT:
 			if (value == 0) {
-				qDebug() << value;
-				throw UserInputWrongConfigArg();
+				throw UserInputWrongConfigArg(param, value);
 			}
 			break;
 		default:
