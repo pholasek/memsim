@@ -143,7 +143,7 @@ class MemHierarchy
 		//! Dumps all devices in model.
 		QString show_devs();
 		//! Dumps statistics of all devices in the model.
-		QString show_stats();
+		QString show_stats(int parseable);
 		//! Get type of device
 		/*!
 		 * \param[in] name Name of the device.
@@ -218,15 +218,15 @@ class MemHierarchy
 		//! Shows attributes of page_table.
 		QString show_page_table();
 		//! Shows statistics of give cache.
-		QString show_cache_stats(mem_t type);
+		QString show_cache_stats(mem_t type, int parseable);
 		//! Shows statistics of ram memory.
-		QString show_ram_stats();
+		QString show_ram_stats(int parseable);
 		//! Shows statistics of swap memory.
-		QString show_swap_stats();
+		QString show_swap_stats(int parseable);
 		//! Shows statistics of tlb memory.
-		QString show_tlb_stats();
+		QString show_tlb_stats(int parseable);
 		//! Shows statistics of pg_table.
-		QString show_page_table_stats();
+		QString show_page_table_stats(int parseable);
 		//! An array containing info about presence of devices in current simulation model
 		static bool dev_map[dev_num];
 		//! A mapping between name and type.

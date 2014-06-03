@@ -46,6 +46,8 @@ protected slots:
 	void finish();
 	//! Writes settings from GUI entities to config
 	void write_settings();
+	//! Reset sim state in case of changed tabs
+	void flush_sim();
 
 private:
 	//! Refresh statistics in GUI

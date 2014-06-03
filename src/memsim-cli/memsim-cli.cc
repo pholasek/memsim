@@ -82,7 +82,7 @@ QString MemSimCli::show(QStringList & args)
 	} else if (args[1] == "stats") {
 		return sim.show_stats();
 	} else if (args[1] == "statsall") {
-		return sim.show_statsall();
+		return sim.show_statsall(0);
 	} else if (args[1] == "devices") {
 		return sim.show_hierarchy();
 	} else {

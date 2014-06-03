@@ -20,6 +20,7 @@
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
@@ -29,7 +30,6 @@
 #include <QtGui/QSpacerItem>
 #include <QtGui/QSpinBox>
 #include <QtGui/QTabWidget>
-#include <QtGui/QToolBar>
 #include <QtGui/QToolButton>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
@@ -56,6 +56,28 @@ public:
     QFrame *frame;
     QGridLayout *gridLayout_2;
     QWidget *widget;
+    QFrame *frame_3;
+    QFormLayout *formLayout_2;
+    QLabel *labsd;
+    QLineEdit *l1acc;
+    QLabel *l;
+    QLineEdit *l1missval;
+    QLabel *label_17;
+    QLineEdit *l2acc;
+    QLabel *label_18;
+    QLineEdit *l2missval;
+    QLabel *label_19;
+    QLineEdit *l3acc;
+    QLabel *label_20;
+    QLineEdit *l3missval;
+    QLabel *label_21;
+    QLineEdit *tlbacc;
+    QLabel *label_22;
+    QLineEdit *tlbmissval;
+    QLabel *label_23;
+    QLineEdit *time;
+    QLabel *label_24;
+    QLineEdit *accesses;
     QFormLayout *formLayout;
     QCheckBox *l1check;
     QRadioButton *anoldradio;
@@ -100,13 +122,12 @@ public:
     QMenu *menuEdit;
     QMenu *menuSimulation;
     QMenu *menuHelp;
-    QToolBar *toolBar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(810, 994);
+        MainWindow->resize(705, 1025);
         actionRun = new QAction(MainWindow);
         actionRun->setObjectName(QString::fromUtf8("actionRun"));
         action_Load_File = new QAction(MainWindow);
@@ -170,6 +191,131 @@ public:
 
 
         horizontalLayout->addWidget(frame);
+
+        frame_3 = new QFrame(frame_2);
+        frame_3->setObjectName(QString::fromUtf8("frame_3"));
+        QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(frame_3->sizePolicy().hasHeightForWidth());
+        frame_3->setSizePolicy(sizePolicy1);
+        frame_3->setFrameShape(QFrame::StyledPanel);
+        frame_3->setFrameShadow(QFrame::Raised);
+        formLayout_2 = new QFormLayout(frame_3);
+        formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
+        formLayout_2->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+        labsd = new QLabel(frame_3);
+        labsd->setObjectName(QString::fromUtf8("labsd"));
+
+        formLayout_2->setWidget(0, QFormLayout::LabelRole, labsd);
+
+        l1acc = new QLineEdit(frame_3);
+        l1acc->setObjectName(QString::fromUtf8("l1acc"));
+        l1acc->setEnabled(false);
+
+        formLayout_2->setWidget(0, QFormLayout::FieldRole, l1acc);
+
+        l = new QLabel(frame_3);
+        l->setObjectName(QString::fromUtf8("l"));
+
+        formLayout_2->setWidget(1, QFormLayout::LabelRole, l);
+
+        l1missval = new QLineEdit(frame_3);
+        l1missval->setObjectName(QString::fromUtf8("l1missval"));
+        l1missval->setEnabled(false);
+
+        formLayout_2->setWidget(1, QFormLayout::FieldRole, l1missval);
+
+        label_17 = new QLabel(frame_3);
+        label_17->setObjectName(QString::fromUtf8("label_17"));
+
+        formLayout_2->setWidget(2, QFormLayout::LabelRole, label_17);
+
+        l2acc = new QLineEdit(frame_3);
+        l2acc->setObjectName(QString::fromUtf8("l2acc"));
+        l2acc->setEnabled(false);
+
+        formLayout_2->setWidget(2, QFormLayout::FieldRole, l2acc);
+
+        label_18 = new QLabel(frame_3);
+        label_18->setObjectName(QString::fromUtf8("label_18"));
+
+        formLayout_2->setWidget(3, QFormLayout::LabelRole, label_18);
+
+        l2missval = new QLineEdit(frame_3);
+        l2missval->setObjectName(QString::fromUtf8("l2missval"));
+        l2missval->setEnabled(false);
+
+        formLayout_2->setWidget(3, QFormLayout::FieldRole, l2missval);
+
+        label_19 = new QLabel(frame_3);
+        label_19->setObjectName(QString::fromUtf8("label_19"));
+
+        formLayout_2->setWidget(4, QFormLayout::LabelRole, label_19);
+
+        l3acc = new QLineEdit(frame_3);
+        l3acc->setObjectName(QString::fromUtf8("l3acc"));
+        l3acc->setEnabled(false);
+
+        formLayout_2->setWidget(4, QFormLayout::FieldRole, l3acc);
+
+        label_20 = new QLabel(frame_3);
+        label_20->setObjectName(QString::fromUtf8("label_20"));
+
+        formLayout_2->setWidget(5, QFormLayout::LabelRole, label_20);
+
+        l3missval = new QLineEdit(frame_3);
+        l3missval->setObjectName(QString::fromUtf8("l3missval"));
+        l3missval->setEnabled(false);
+
+        formLayout_2->setWidget(5, QFormLayout::FieldRole, l3missval);
+
+        label_21 = new QLabel(frame_3);
+        label_21->setObjectName(QString::fromUtf8("label_21"));
+
+        formLayout_2->setWidget(6, QFormLayout::LabelRole, label_21);
+
+        tlbacc = new QLineEdit(frame_3);
+        tlbacc->setObjectName(QString::fromUtf8("tlbacc"));
+        tlbacc->setEnabled(false);
+
+        formLayout_2->setWidget(6, QFormLayout::FieldRole, tlbacc);
+
+        label_22 = new QLabel(frame_3);
+        label_22->setObjectName(QString::fromUtf8("label_22"));
+
+        formLayout_2->setWidget(7, QFormLayout::LabelRole, label_22);
+
+        tlbmissval = new QLineEdit(frame_3);
+        tlbmissval->setObjectName(QString::fromUtf8("tlbmissval"));
+        tlbmissval->setEnabled(false);
+
+        formLayout_2->setWidget(7, QFormLayout::FieldRole, tlbmissval);
+
+        label_23 = new QLabel(frame_3);
+        label_23->setObjectName(QString::fromUtf8("label_23"));
+
+        formLayout_2->setWidget(9, QFormLayout::LabelRole, label_23);
+
+        time = new QLineEdit(frame_3);
+        time->setObjectName(QString::fromUtf8("time"));
+        time->setEnabled(false);
+
+        formLayout_2->setWidget(9, QFormLayout::FieldRole, time);
+
+        label_24 = new QLabel(frame_3);
+        label_24->setObjectName(QString::fromUtf8("label_24"));
+
+        formLayout_2->setWidget(10, QFormLayout::LabelRole, label_24);
+
+        accesses = new QLineEdit(frame_3);
+        accesses->setObjectName(QString::fromUtf8("accesses"));
+        accesses->setEnabled(false);
+
+        formLayout_2->setWidget(10, QFormLayout::FieldRole, accesses);
+
+
+        horizontalLayout->addWidget(frame_3);
 
         formLayout = new QFormLayout();
         formLayout->setObjectName(QString::fromUtf8("formLayout"));
@@ -404,7 +550,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 810, 27));
+        menubar->setGeometry(QRect(0, 0, 705, 27));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         menuEdit = new QMenu(menubar);
@@ -414,9 +560,6 @@ public:
         menuHelp = new QMenu(menubar);
         menuHelp->setObjectName(QString::fromUtf8("menuHelp"));
         MainWindow->setMenuBar(menubar);
-        toolBar = new QToolBar(MainWindow);
-        toolBar->setObjectName(QString::fromUtf8("toolBar"));
-        MainWindow->addToolBar(Qt::TopToolBarArea, toolBar);
 
         menubar->addAction(menuFile->menuAction());
         menubar->addAction(menuEdit->menuAction());
@@ -443,6 +586,16 @@ public:
         actionRun_stp->setText(QApplication::translate("MainWindow", "Run step", 0, QApplication::UnicodeUTF8));
         step_button->setText(QApplication::translate("MainWindow", "Step", 0, QApplication::UnicodeUTF8));
         finish_button->setText(QApplication::translate("MainWindow", "Finish", 0, QApplication::UnicodeUTF8));
+        labsd->setText(QApplication::translate("MainWindow", "L1 acc", 0, QApplication::UnicodeUTF8));
+        l->setText(QApplication::translate("MainWindow", "L1 miss", 0, QApplication::UnicodeUTF8));
+        label_17->setText(QApplication::translate("MainWindow", "L2 acc", 0, QApplication::UnicodeUTF8));
+        label_18->setText(QApplication::translate("MainWindow", "L2 miss", 0, QApplication::UnicodeUTF8));
+        label_19->setText(QApplication::translate("MainWindow", "L3 acc", 0, QApplication::UnicodeUTF8));
+        label_20->setText(QApplication::translate("MainWindow", "L3 miss", 0, QApplication::UnicodeUTF8));
+        label_21->setText(QApplication::translate("MainWindow", "TLB acc", 0, QApplication::UnicodeUTF8));
+        label_22->setText(QApplication::translate("MainWindow", "TLB miss", 0, QApplication::UnicodeUTF8));
+        label_23->setText(QApplication::translate("MainWindow", "Time", 0, QApplication::UnicodeUTF8));
+        label_24->setText(QApplication::translate("MainWindow", "Accesses", 0, QApplication::UnicodeUTF8));
         l1check->setText(QApplication::translate("MainWindow", "L1", 0, QApplication::UnicodeUTF8));
         anoldradio->setText(QApplication::translate("MainWindow", "I a D spole\304\215n\303\251", 0, QApplication::UnicodeUTF8));
         neldradio->setText(QApplication::translate("MainWindow", "I a D odd\304\233leny", 0, QApplication::UnicodeUTF8));
@@ -470,7 +623,6 @@ public:
         menuEdit->setTitle(QApplication::translate("MainWindow", "&Edit", 0, QApplication::UnicodeUTF8));
         menuSimulation->setTitle(QApplication::translate("MainWindow", "&Simulation", 0, QApplication::UnicodeUTF8));
         menuHelp->setTitle(QApplication::translate("MainWindow", "&Help", 0, QApplication::UnicodeUTF8));
-        toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

@@ -16,6 +16,7 @@ MemSimGui::MemSimGui(QWidget *parent) : QMainWindow(parent)
 	connect(ui->step_button, SIGNAL(clicked()), this, SLOT(run_trace_step()));
 	connect(ui->finish_button, SIGNAL(clicked()), this, SLOT(finish()));
 	connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(write_settings()));
+	connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(flush_sim()));
 
 	sim.load_configuration();
 	read_settings();
@@ -225,7 +226,14 @@ void MemSimGui::run_trace()
 	int curr_trace;
 	
 	curr_trace = ui->tabWidget->indexOf(ui->tabWidget->currentWidget());
-	sim.run_trace(curr_trace);
+	try {
+		sim.run_trace(curr_trace);
+	} catch (UserInputBadTraceId &ex) { 
+		QMessageBox messageBox;
+		messageBox.critical(0,"Error","Non-existing trace file.");
+		messageBox.setFixedSize(500,200);
+		return;
+	}
 	write_log(QString("Simulation of trace %1 was completed.").arg(curr_trace));
 	refresh_stats();
 }
@@ -236,7 +244,14 @@ void MemSimGui::run_trace_step()
 	
 	curr_trace = ui->tabWidget->indexOf(ui->tabWidget->currentWidget());
 
-	step = sim.run_trace_step(curr_trace,0);
+	try {
+		step = sim.run_trace_step(curr_trace,0);
+	} catch (UserInputBadTraceId &ex) { 
+		QMessageBox messageBox;
+		messageBox.critical(0,"Error","Non-existing trace file.");
+		messageBox.setFixedSize(500,200);
+		return;
+	}
 	QListView * tv = qobject_cast<QListView*>(ui->tabWidget->currentWidget());
 	QModelIndex new_index = tv->model()->index(step,0);
 	tv->setCurrentIndex(new_index);
@@ -259,6 +274,30 @@ void MemSimGui::finish()
 
 void MemSimGui::refresh_stats()
 {
+	QString stats = sim.show_statsall(1);
+
+	QRegExp rx("time:(\\d+) allacc:(\\d+) l1acc:(\\d+) l1missratio:(\\d+[\\.\\d]*) l2acc:(\\d+) l2missratio:(\\d+[\\.\\d]*) l3acc:(\\d+) l3missratio:(\\d+[\\.\\d]*)");
+
+	int pos = rx.indexIn(stats);
+	
+	if (pos > -1)
+	{
+		ui->time->setText(rx.cap(1));
+		ui->accesses->setText(rx.cap(2));
+		ui->l1acc->setText(rx.cap(3));
+		ui->l1missval->setText(rx.cap(4)+'%');
+		ui->l2acc->setText(rx.cap(5));
+		ui->l2missval->setText(rx.cap(6)+'%');
+		ui->l3acc->setText(rx.cap(7));
+		ui->l3missval->setText(rx.cap(8)+'%');
+	} else {
+		write_log(stats);
+	}
+}
+
+void MemSimGui::flush_sim()
+{
+	sim.clean_devs();
 }
 
 void MemSimGui::load_trace()

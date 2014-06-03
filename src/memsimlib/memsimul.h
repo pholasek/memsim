@@ -54,7 +54,7 @@ class MemSimulation
 		 * \return Position in simulated trace.
 		 * \sa ::MemTrace
 		 */
-		int sim_trace_step(MemTrace & trace, int flush);
+		int sim_trace_step(MemTrace * trace, int flush);
 		//! Set parameter of object to value
 		/*!
 		 * \param[in] object Configured object.
@@ -98,18 +98,20 @@ class MemSimulation
 		/*!
 		 * \return List of all statistics of devices in model.
 		 */
-		QString show_statsall();
+		QString show_statsall(int parseable);
 		//! Shows calendar statistics
 		/*!
 		 * \return Calendar statistics
 		 */
-		QString show_calendstats();
+		QString show_calendstats(int parseable);
 		//! Set split of L1 cache
 		void set_l1split(bool val) { l1split = val; toggle_l1split(); }
 		//! Return state of pg_table
 		bool has_pg_table() { return devs.has_pg_table(); }
 		//! Return state of simulation
 		simstate get_state() { return state; }
+		//! Clean device data
+		void clean_devs();
         private:
 		//! A constructor. It is private due to Singleton design pattern.
                 MemSimulation();

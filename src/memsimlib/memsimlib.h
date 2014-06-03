@@ -142,7 +142,7 @@ class MEMSIMLIB_EXPORT MemSimulationObj
 	/*!
 	 * \return Statistics in formated QString
 	 */
-	QString show_statsall(void);
+	QString show_statsall(int parseable);
 	//! Returns list of components of model
 	/*!
 	 * \return List of model components
@@ -154,6 +154,8 @@ class MEMSIMLIB_EXPORT MemSimulationObj
 	bool has_pg_table();
 	//! Split/unsplit L1 cache
 	void set_l1split(bool val);
+	//! Clean dev stats
+	void clean_devs();
     private:
 	//! Core MemSimulation object
 	/*!

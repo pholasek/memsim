@@ -48,7 +48,7 @@ int MemSimulationObj::run_trace_step(int id, int flush)
 	if (!traces.contains(id))
 		throw UserInputBadTraceId();
 
-	step = obj.sim_trace_step(*(traces.value(id)->obj), flush);
+	step = obj.sim_trace_step(traces.value(id)->obj, flush);
 
 	return step;
 }
@@ -91,9 +91,9 @@ QString MemSimulationObj::show_stats(void)
 	return QString();
 }
 
-QString MemSimulationObj::show_statsall(void)
+QString MemSimulationObj::show_statsall(int parseable)
 {
-	return obj.show_calendstats() + obj.show_statsall();
+	return obj.show_calendstats(parseable) + obj.show_statsall(parseable);
 }
 
 void MemSimulationObj::add_device(QString & name)
@@ -119,6 +119,11 @@ bool MemSimulationObj::has_pg_table()
 void MemSimulationObj::set_l1split(bool val)
 {
 	obj.set_l1split(val);
+}
+
+void MemSimulationObj::clean_devs()
+{
+	obj.clean_devs();
 }
 //! Constructor
 MemSimulation::MemSimulation() : settings(new QSettings("MemSim", "memsim"))
@@ -392,6 +397,11 @@ MemDevice * MemSimulation::process_inst(const MemTraceEntry & e)
 	 return start_dev;
 }
 
+void MemSimulation::clean_devs()
+{
+	devs.reset_devs();
+}
+
 void MemSimulation::sim_instr(const MemTraceEntry & e)
 {
 	mem_t found;
@@ -410,11 +420,17 @@ void MemSimulation::sim_instr(const MemTraceEntry & e)
 	}
 }
 
-int MemSimulation::sim_trace_step(MemTrace & trace, int flush)
+int MemSimulation::sim_trace_step(MemTrace * trace, int flush)
 {
-	static MemTrace & trc = trace;
+	static MemTrace * trc = NULL;
 	static int end = 0;
 	static int step = 0;
+
+	if (trc != trace) {
+		trc = trace;
+		end = 0;
+		step = 0;
+	}
 
 	if (!step) {
 		devs.commit_changes();
@@ -423,17 +439,17 @@ int MemSimulation::sim_trace_step(MemTrace & trace, int flush)
 	}
 
 
-	if (!trc.get_size())
+	if (!trc->get_size())
 		return 0;
 
 	if (!end) {
 		if (!flush) {
-			const MemTraceEntry & e = trc.get_next(&end);
+			const MemTraceEntry & e = trc->get_next(&end);
 			sim_instr(e);
 			step++;
 		} else {
 			do {
-				const MemTraceEntry & e = trc.get_next(&end); //! Get next line from trace
+				const MemTraceEntry & e = trc->get_next(&end); //! Get next line from trace
 				sim_instr(e);
 				step++;
 			} while (!end);
@@ -444,10 +460,10 @@ int MemSimulation::sim_trace_step(MemTrace & trace, int flush)
 	this->state = STOP;
 
 	devs.reset_devs();
-	trc.reset_trace();
+	trc->reset_trace();
 	step = 0;
 
-	return trc.get_size()-1;
+	return trc->get_size()-1;
 }
 
 void MemSimulation::sim_trace(MemTrace & trace)
@@ -692,16 +708,22 @@ QString MemSimulation::show_devs()
 	return devs.show_devs();
 }
 
-QString MemSimulation::show_statsall()
+QString MemSimulation::show_statsall(int parseable)
 {
-	return devs.show_stats();
+	return devs.show_stats(parseable);
 }
 
-QString MemSimulation::show_calendstats()
+QString MemSimulation::show_calendstats(int parseable)
 {
 	MemSimCalendStats stats = cal.get_stats();
 	
-	return QString("Calendar stats:\n\tTime (cpu cycles) of simulation: %1\n\tNumber of memory accesses:%2\n")
+	if (!parseable)
+		return QString("Calendar stats:\n\tTime (cpu cycles) of simulation: %1\n\tNumber of memory accesses:%2\n")
 		.arg(stats.Time)
 		.arg(stats.ev_proc);
+	else
+		return QString("time:%1 allacc:%2 ")
+		.arg(stats.Time)
+		.arg(stats.ev_proc);
+
 }
