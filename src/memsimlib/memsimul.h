@@ -47,6 +47,14 @@ class MemSimulation
 		 * \sa ::MemTrace
 		 */
                 void sim_trace(MemTrace & trace);
+		//! Run one step of simulation of given trace.
+		/*!
+		 * \param[in] trace Trace object for simulation.
+		 * \param[in] flush If set, finish simulation of the trace.
+		 * \return Position in simulated trace.
+		 * \sa ::MemTrace
+		 */
+		int sim_trace_step(MemTrace & trace, int flush);
 		//! Set parameter of object to value
 		/*!
 		 * \param[in] object Configured object.
@@ -100,6 +108,8 @@ class MemSimulation
 		void set_l1split(bool val) { l1split = val; toggle_l1split(); }
 		//! Return state of pg_table
 		bool has_pg_table() { return devs.has_pg_table(); }
+		//! Return state of simulation
+		simstate get_state() { return state; }
         private:
 		//! A constructor. It is private due to Singleton design pattern.
                 MemSimulation();
@@ -121,6 +131,8 @@ class MemSimulation
 		MemDevice * process_inst(const MemTraceEntry & e);
 		//! Part of simulation of VM model
 		mem_t search_vm(const MemTraceEntry & e);
+		//! Perform simulation of one trace line
+		void sim_instr(const MemTraceEntry & e);
 		//! Init devices in model.
 		void init_devices();
 		//! Set caches in model according to existing settings.

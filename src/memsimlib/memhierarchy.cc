@@ -400,7 +400,7 @@ void MemHierarchy::config_page_table(QString & param, long value)
 {
 }
 
-QString MemHierarchy::show_cache_stats(mem_t type)
+QString MemHierarchy::show_cache_stats(mem_t type, int parseable)
 {
 	MemDeviceCache *ptr = NULL;
 
@@ -417,14 +417,17 @@ QString MemHierarchy::show_cache_stats(mem_t type)
 	else
 		hit_ratio = 0.0f;
 
-	return QString("%1:\n\taccess:%2\n\tmiss:%3\n\thit ratio:%4\%\n")
+	if (parseable)
+		return QString("%1:\n\taccess:%2\n\tmiss:%3\n\thit ratio:%4\%\n")
 			.arg(get_name(type))
 			.arg(stats.get_ac())
 			.arg(stats.get_miss())
 			.arg(hit_ratio);
+	else
+		return QString("%1acc:
 }
 
-QString MemHierarchy::show_ram_stats()
+QString MemHierarchy::show_ram_stats(int parseable)
 {
 	MemDeviceRAM *ptr = ram;
 
@@ -439,7 +442,7 @@ QString MemHierarchy::show_ram_stats()
 			.arg(stats.get_miss());
 }
 
-QString MemHierarchy::show_swap_stats()
+QString MemHierarchy::show_swap_stats(int parseable)
 {
 	MemDeviceSwap *ptr = swap;
 
@@ -454,12 +457,12 @@ QString MemHierarchy::show_swap_stats()
 			.arg(stats.get_miss());
 }
 
-QString MemHierarchy::show_tlb_stats()
+QString MemHierarchy::show_tlb_stats(int parseable)
 {
 	return show_cache_stats(TLB);
 }
 
-QString MemHierarchy::show_page_table_stats()
+QString MemHierarchy::show_page_table_stats(int parseable)
 {
 	MemPageTable *ptr = pg_table;
 
@@ -473,7 +476,7 @@ QString MemHierarchy::show_page_table_stats()
 			.arg(stats.get_opts());
 }
 
-QString MemHierarchy::show_stats()
+QString MemHierarchy::show_stats(int parseable)
 {
 	QString out;
 

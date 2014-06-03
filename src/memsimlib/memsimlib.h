@@ -92,6 +92,13 @@ class MEMSIMLIB_EXPORT MemSimulationObj
 	 * \see show_traces(void)
 	 */
 	int run_trace(int trace_id);
+	//! Start step simulation of a trace
+	/*!
+	 * \param[in] trace_id id of loaded trace
+	 * \param[in] flush When set to non-zero, simulation will be finished
+	 * \see show_traces(void)
+	 */
+	int run_trace_step(int trace_id, int flush);
 	//! Loads trace file into memory
 	/*!
 	 * \param[in] path path to trace file

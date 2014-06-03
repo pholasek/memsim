@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'memsim.ui'
 **
-** Created by: Qt User Interface Compiler version 4.8.5
+** Created by: Qt User Interface Compiler version 4.8.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -26,9 +26,11 @@
 #include <QtGui/QPlainTextEdit>
 #include <QtGui/QPushButton>
 #include <QtGui/QRadioButton>
+#include <QtGui/QSpacerItem>
 #include <QtGui/QSpinBox>
 #include <QtGui/QTabWidget>
 #include <QtGui/QToolBar>
+#include <QtGui/QToolButton>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 #include <powerspinbox.h>
@@ -44,6 +46,10 @@ public:
     QAction *actionRun_stp;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
+    QHBoxLayout *horizontalLayout_3;
+    QToolButton *step_button;
+    QToolButton *finish_button;
+    QSpacerItem *horizontalSpacer;
     QFrame *frame_2;
     QHBoxLayout *horizontalLayout;
     QTabWidget *tabWidget;
@@ -100,7 +106,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(810, 872);
+        MainWindow->resize(810, 994);
         actionRun = new QAction(MainWindow);
         actionRun->setObjectName(QString::fromUtf8("actionRun"));
         action_Load_File = new QAction(MainWindow);
@@ -113,6 +119,28 @@ public:
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        horizontalLayout_3->setContentsMargins(-1, -1, -1, 8);
+        step_button = new QToolButton(centralwidget);
+        step_button->setObjectName(QString::fromUtf8("step_button"));
+        step_button->setEnabled(true);
+
+        horizontalLayout_3->addWidget(step_button);
+
+        finish_button = new QToolButton(centralwidget);
+        finish_button->setObjectName(QString::fromUtf8("finish_button"));
+        finish_button->setEnabled(true);
+
+        horizontalLayout_3->addWidget(finish_button);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer);
+
+
+        verticalLayout->addLayout(horizontalLayout_3);
+
         frame_2 = new QFrame(centralwidget);
         frame_2->setObjectName(QString::fromUtf8("frame_2"));
         QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -138,7 +166,7 @@ public:
         widget = new QWidget(frame);
         widget->setObjectName(QString::fromUtf8("widget"));
 
-        gridLayout_2->addWidget(widget, 0, 1, 1, 1);
+        gridLayout_2->addWidget(widget, 0, 0, 1, 1);
 
 
         horizontalLayout->addWidget(frame);
@@ -413,6 +441,8 @@ public:
         action_Load_File->setText(QApplication::translate("MainWindow", "&Load File", 0, QApplication::UnicodeUTF8));
         action_Settings->setText(QApplication::translate("MainWindow", "&Settings", 0, QApplication::UnicodeUTF8));
         actionRun_stp->setText(QApplication::translate("MainWindow", "Run step", 0, QApplication::UnicodeUTF8));
+        step_button->setText(QApplication::translate("MainWindow", "Step", 0, QApplication::UnicodeUTF8));
+        finish_button->setText(QApplication::translate("MainWindow", "Finish", 0, QApplication::UnicodeUTF8));
         l1check->setText(QApplication::translate("MainWindow", "L1", 0, QApplication::UnicodeUTF8));
         anoldradio->setText(QApplication::translate("MainWindow", "I a D spole\304\215n\303\251", 0, QApplication::UnicodeUTF8));
         neldradio->setText(QApplication::translate("MainWindow", "I a D odd\304\233leny", 0, QApplication::UnicodeUTF8));

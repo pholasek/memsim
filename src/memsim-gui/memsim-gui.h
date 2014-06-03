@@ -40,10 +40,16 @@ protected slots:
 	void load_trace();
 	//! Slot called for simulation of trace
 	void run_trace();
+	//! Slot called for step simulation of trace
+	void run_trace_step();
+	//! Slot called for the finish of simulation
+	void finish();
 	//! Writes settings from GUI entities to config
 	void write_settings();
 
 private:
+	//! Refresh statistics in GUI
+	void refresh_stats();
 	Ui::MainWindow * ui;
 	MemSimulationObj sim;
 };

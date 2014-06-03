@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>810</width>
-    <height>872</height>
+    <width>705</width>
+    <height>1025</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,6 +15,46 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <property name="bottomMargin">
+       <number>8</number>
+      </property>
+      <item>
+       <widget class="QToolButton" name="step_button">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Step</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="finish_button">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Finish</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
     <item>
      <widget class="QFrame" name="frame_2">
       <property name="sizePolicy">
@@ -42,8 +82,169 @@
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="0" column="1">
+          <item row="0" column="0">
            <widget class="QWidget" name="widget" native="true"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frame_3">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QFormLayout" name="formLayout_2">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labsd">
+            <property name="text">
+             <string>L1 acc</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="l1acc">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="l">
+            <property name="text">
+             <string>L1 miss</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="l1missval">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_17">
+            <property name="text">
+             <string>L2 acc</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="l2acc">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_18">
+            <property name="text">
+             <string>L2 miss</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="l2missval">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_19">
+            <property name="text">
+             <string>L3 acc</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="l3acc">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_20">
+            <property name="text">
+             <string>L3 miss</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLineEdit" name="l3missval">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="label_21">
+            <property name="text">
+             <string>TLB acc</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="tlbacc">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="label_22">
+            <property name="text">
+             <string>TLB miss</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLineEdit" name="tlbmissval">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="label_23">
+            <property name="text">
+             <string>Time</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLineEdit" name="time">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0">
+           <widget class="QLabel" name="label_24">
+            <property name="text">
+             <string>Accesses</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <widget class="QLineEdit" name="accesses">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -379,7 +580,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>810</width>
+     <width>705</width>
      <height>27</height>
     </rect>
    </property>
@@ -411,17 +612,6 @@
    <addaction name="menuEdit"/>
    <addaction name="menuSimulation"/>
    <addaction name="menuHelp"/>
-  </widget>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>toolBar</string>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
   </widget>
   <action name="actionRun">
    <property name="text">
@@ -460,12 +650,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>457</x>
-     <y>624</y>
+     <x>556</x>
+     <y>752</y>
     </hint>
     <hint type="destinationlabel">
-     <x>454</x>
-     <y>504</y>
+     <x>479</x>
+     <y>612</y>
     </hint>
    </hints>
   </connection>
@@ -476,12 +666,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>511</x>
-     <y>634</y>
+     <x>556</x>
+     <y>752</y>
     </hint>
     <hint type="destinationlabel">
-     <x>487</x>
-     <y>694</y>
+     <x>491</x>
+     <y>820</y>
     </hint>
    </hints>
   </connection>

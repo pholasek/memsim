@@ -41,6 +41,18 @@ int MemSimulationObj::run_trace(int id)
 	return 0;
 }
 
+int MemSimulationObj::run_trace_step(int id, int flush)
+{
+	int step;
+
+	if (!traces.contains(id))
+		throw UserInputBadTraceId();
+
+	step = obj.sim_trace_step(*(traces.value(id)->obj), flush);
+
+	return step;
+}
+
 void MemSimulationObj::config_param(QString & object, QString & param, QString value)
 {
 	obj.set_cfg_param(object, param, value);
@@ -380,10 +392,67 @@ MemDevice * MemSimulation::process_inst(const MemTraceEntry & e)
 	 return start_dev;
 }
 
+void MemSimulation::sim_instr(const MemTraceEntry & e)
+{
+	mem_t found;
+	int ret = HIT;
+
+	if (devs.has_pg_table()) //! If VM is turned on - address translation
+		found = search_vm(e);
+	devs.set_sim_dev(process_inst(e)); //! Process the line
+
+	while (1) { //! Search for address in ascendant order
+		ret = cal.do_next(); //! Do next action scheduled in calendar
+		if (ret == HIT || devs.on_last_dev()) //! Break and go to the next traceline
+			break;
+		if (!devs.next_dev()) //! Insert next action to calendar
+			cal.clone_current(devs.get_sim_dev());
+	}
+}
+
+int MemSimulation::sim_trace_step(MemTrace & trace, int flush)
+{
+	static MemTrace & trc = trace;
+	static int end = 0;
+	static int step = 0;
+
+	if (!step) {
+		devs.commit_changes();
+		cal.reset_calend();
+		this->state = RUNNING;
+	}
+
+
+	if (!trc.get_size())
+		return 0;
+
+	if (!end) {
+		if (!flush) {
+			const MemTraceEntry & e = trc.get_next(&end);
+			sim_instr(e);
+			step++;
+		} else {
+			do {
+				const MemTraceEntry & e = trc.get_next(&end); //! Get next line from trace
+				sim_instr(e);
+				step++;
+			} while (!end);
+		}
+		return step;
+	}
+
+	this->state = STOP;
+
+	devs.reset_devs();
+	trc.reset_trace();
+	step = 0;
+
+	return trc.get_size()-1;
+}
+
 void MemSimulation::sim_trace(MemTrace & trace)
 {
-	int ret = HIT, end = 0;
-	mem_t found;
+	int end = 0;
 
 	devs.commit_changes();
 	cal.reset_calend();
@@ -394,16 +463,7 @@ void MemSimulation::sim_trace(MemTrace & trace)
 	do {
 		const MemTraceEntry & e = trace.get_next(&end); //! Get next line from trace
 
-		if (devs.has_pg_table()) //! If VM is turned on - address translation
-			found = search_vm(e);
-		devs.set_sim_dev(process_inst(e)); //! Process the line
-		while (1) { //! Search for address in ascendant order
-			ret = cal.do_next(); //! Do next action scheduled in calendar
-			if (ret == HIT || devs.on_last_dev()) //! Break and go to the next traceline
-				break;
-			if (!devs.next_dev()) //! Insert next action to calendar
-				cal.clone_current(devs.get_sim_dev());
-		}
+		sim_instr(e);
 	} while (!end);
 
 	devs.reset_devs();

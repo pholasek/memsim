@@ -12,6 +12,9 @@ MemSimGui::MemSimGui(QWidget *parent) : QMainWindow(parent)
 	ui->setupUi(this);
 	connect(ui->action_Load_File, SIGNAL(triggered()), this, SLOT(load_trace()));
 	connect(ui->actionRun, SIGNAL(triggered()), this, SLOT(run_trace()));
+	connect(ui->actionRun_stp, SIGNAL(triggered()), this, SLOT(run_trace_step()));
+	connect(ui->step_button, SIGNAL(clicked()), this, SLOT(run_trace_step()));
+	connect(ui->finish_button, SIGNAL(clicked()), this, SLOT(finish()));
 	connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(write_settings()));
 
 	sim.load_configuration();
@@ -224,6 +227,38 @@ void MemSimGui::run_trace()
 	curr_trace = ui->tabWidget->indexOf(ui->tabWidget->currentWidget());
 	sim.run_trace(curr_trace);
 	write_log(QString("Simulation of trace %1 was completed.").arg(curr_trace));
+	refresh_stats();
+}
+
+void MemSimGui::run_trace_step()
+{
+	int curr_trace, step;
+	
+	curr_trace = ui->tabWidget->indexOf(ui->tabWidget->currentWidget());
+
+	step = sim.run_trace_step(curr_trace,0);
+	QListView * tv = qobject_cast<QListView*>(ui->tabWidget->currentWidget());
+	QModelIndex new_index = tv->model()->index(step,0);
+	tv->setCurrentIndex(new_index);
+	refresh_stats();
+}
+
+void MemSimGui::finish()
+{
+	int curr_trace, step;
+	
+	curr_trace = ui->tabWidget->indexOf(ui->tabWidget->currentWidget());
+
+	step = sim.run_trace_step(curr_trace,1);
+	QListView * tv = qobject_cast<QListView*>(ui->tabWidget->currentWidget());
+	QModelIndex new_index = tv->model()->index(step,0);
+	tv->setCurrentIndex(new_index);
+	write_log(QString("Simulation of trace %1 was completed.").arg(curr_trace));
+	refresh_stats();
+}
+
+void MemSimGui::refresh_stats()
+{
 }
 
 void MemSimGui::load_trace()
@@ -249,9 +284,12 @@ void MemSimGui::load_trace()
 		ui->tabWidget->setCurrentIndex(ret);
 		QListView * tv = qobject_cast<QListView*>(ui->tabWidget->currentWidget());
 		tv->setModel(sim.dump_trace(ret));
+		//tv->setSelectionMode(QAbstractItemView::NoSelection);
+		tv->setSelectionBehavior(QAbstractItemView::SelectRows);
 		write_log(QString("Successfully loaded trace id %1.").arg(ret));
 	}
 }
+
 
 int main(int argc, char *argv[])
 {
