@@ -271,6 +271,8 @@ class MemDeviceCache : public MemDevice
 		long get_assoc() {return assoc;}
 		//! Returns policy used in cache.
 		policy_t get_policy() {return pol;}
+		//! Returns number of sets
+		long get_sets() { return sets; }
 		//! Clean and re-compute all cache variables.
 		void refresh_cache();
 		//! Returns cache stats
@@ -284,6 +286,9 @@ class MemDeviceCache : public MemDevice
 		 * \param[in] size Size of accessed memory.
 		 */
                 int do_mem_ref(quint64 addr, quint64 size);
+		//! Accesses to cache
+		quint64 *accmap;
+		//! MemHierarchy is a good friend
 		friend MemHierarchy;
         protected:
 		//! Replacement policy used in cache.
@@ -304,8 +309,6 @@ class MemDeviceCache : public MemDevice
                 long tag_shift;
 		//! Data in cache.
                 quint64 *tags;
-		//! Accesses to cache
-		quint64 *accmap;
 		//! Cache statistics.
                 MemDeviceCacheStats stats;
 };

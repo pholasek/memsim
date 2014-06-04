@@ -10,7 +10,7 @@ CONFIG += debug
 QMAKE_CXXFLAGS += -Wfatal-errors
 
 # Input
-SOURCES += memsim-gui.cc powerspinbox.cc
-HEADERS += memsim-gui.h powerspinbox.h ui_memsim.h
+SOURCES += memsim-gui.cc powerspinbox.cc memsimvis.cc
+HEADERS += memsim-gui.h powerspinbox.h memsimvis.h ui_memsim.h
 FORMS += memsim.ui
 

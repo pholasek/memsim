@@ -616,3 +616,15 @@ QString MemHierarchy::show_devs()
 
 	return out;
 }
+
+quint64 * MemHierarchy::get_acc(mem_t type, long * sets, long * assoc)
+{
+	MemDeviceCache * cache = (MemDeviceCache *) assign_p(type);
+
+	if (!cache)
+		return NULL;
+
+	*sets = cache->get_sets();
+	*assoc = cache->get_assoc();
+	return cache->accmap;
+}

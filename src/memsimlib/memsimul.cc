@@ -125,6 +125,11 @@ void MemSimulationObj::clean_devs()
 {
 	obj.clean_devs();
 }
+
+quint64 * MemSimulationObj::get_acc(QString & name, long * sets, long * assoc)
+{
+	return obj.get_acc(name, sets, assoc);
+}
 //! Constructor
 MemSimulation::MemSimulation() : settings(new QSettings("MemSim", "memsim"))
 {
@@ -726,4 +731,11 @@ QString MemSimulation::show_calendstats(int parseable)
 		.arg(stats.Time)
 		.arg(stats.ev_proc);
 
+}
+
+quint64 * MemSimulation::get_acc(QString & name, long * sets, long * assoc)
+{
+	mem_t type = devs.get_type(name);
+
+	return devs.get_acc(type, sets, assoc);
 }

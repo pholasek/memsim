@@ -180,6 +180,8 @@ class MemHierarchy
 		bool has_pg_table() { return dev_map[PT]; }
 		//! Returns presence of swap in hierarchy
 		bool has_swap() { return dev_map[SWAP]; }
+		//! Returns access array of cache along with dimensions
+		quint64 * get_acc(mem_t type, long * sets, long * assoc);
 	private:
 		//! Current simulation device in model.
 		MemDevice *sim_dev;

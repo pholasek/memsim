@@ -236,6 +236,7 @@ void MemSimGui::run_trace()
 	}
 	write_log(QString("Simulation of trace %1 was completed.").arg(curr_trace));
 	refresh_stats();
+	refresh_vis();
 }
 
 void MemSimGui::run_trace_step()
@@ -256,6 +257,7 @@ void MemSimGui::run_trace_step()
 	QModelIndex new_index = tv->model()->index(step,0);
 	tv->setCurrentIndex(new_index);
 	refresh_stats();
+	refresh_vis();
 }
 
 void MemSimGui::finish()
@@ -270,6 +272,7 @@ void MemSimGui::finish()
 	tv->setCurrentIndex(new_index);
 	write_log(QString("Simulation of trace %1 was completed.").arg(curr_trace));
 	refresh_stats();
+	refresh_vis();
 }
 
 void MemSimGui::refresh_stats()
@@ -293,6 +296,20 @@ void MemSimGui::refresh_stats()
 	} else {
 		write_log(stats);
 	}
+}
+
+void MemSimGui::refresh_vis()
+{
+	quint64 * accl1, *accl2, *accl3;
+	long l1sets, l1assoc;
+	long l2sets, l2assoc;
+	long l3sets, l3assoc;
+	QString l1("l1"), l2("l2"), l3("l3");
+
+	accl1 = sim.get_acc(l1, &l1sets, &l1assoc);
+	accl2 = sim.get_acc(l2, &l2sets, &l2assoc);
+	accl3 = sim.get_acc(l3, &l3sets, &l3assoc);
+	//TODO
 }
 
 void MemSimGui::flush_sim()

@@ -156,6 +156,8 @@ class MEMSIMLIB_EXPORT MemSimulationObj
 	void set_l1split(bool val);
 	//! Clean dev stats
 	void clean_devs();
+	//! Get accessmap of cache
+	quint64 * get_acc(QString & name, long * sets, long * assoc);
     private:
 	//! Core MemSimulation object
 	/*!

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>705</width>
+    <width>1178</width>
     <height>1025</height>
    </rect>
   </property>
@@ -83,7 +83,31 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="0" column="0">
-           <widget class="QWidget" name="widget" native="true"/>
+           <widget class="QTabWidget" name="viztabs">
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <widget class="QWidget" name="l1tab">
+             <attribute name="title">
+              <string>L1</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_3">
+              <item row="0" column="0">
+               <widget class="MemSimVis" name="widget" native="true"/>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="l2tab">
+             <attribute name="title">
+              <string>L2</string>
+             </attribute>
+            </widget>
+            <widget class="QWidget" name="l3tab">
+             <attribute name="title">
+              <string>L3</string>
+             </attribute>
+            </widget>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -580,7 +604,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>705</width>
+     <width>1178</width>
      <height>27</height>
     </rect>
    </property>
@@ -639,6 +663,12 @@
    <class>PowerSpinBox</class>
    <extends>QSpinBox</extends>
    <header location="global">powerspinbox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MemSimVis</class>
+   <extends>QWidget</extends>
+   <header location="global">memsimvis.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

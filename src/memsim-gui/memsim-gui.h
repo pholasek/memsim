@@ -48,10 +48,11 @@ protected slots:
 	void write_settings();
 	//! Reset sim state in case of changed tabs
 	void flush_sim();
-
 private:
 	//! Refresh statistics in GUI
 	void refresh_stats();
+	//! Refresh visualization
+	void refresh_vis();
 	Ui::MainWindow * ui;
 	MemSimulationObj sim;
 };

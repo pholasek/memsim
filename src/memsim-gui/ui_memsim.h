@@ -33,6 +33,7 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
+#include <memsimvis.h>
 #include <powerspinbox.h>
 
 QT_BEGIN_NAMESPACE
@@ -55,7 +56,12 @@ public:
     QTabWidget *tabWidget;
     QFrame *frame;
     QGridLayout *gridLayout_2;
-    QWidget *widget;
+    QTabWidget *viztabs;
+    QWidget *l1tab;
+    QGridLayout *gridLayout_3;
+    MemSimVis *widget;
+    QWidget *l2tab;
+    QWidget *l3tab;
     QFrame *frame_3;
     QFormLayout *formLayout_2;
     QLabel *labsd;
@@ -127,7 +133,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(705, 1025);
+        MainWindow->resize(1178, 1025);
         actionRun = new QAction(MainWindow);
         actionRun->setObjectName(QString::fromUtf8("actionRun"));
         action_Load_File = new QAction(MainWindow);
@@ -184,10 +190,26 @@ public:
         frame->setFrameShadow(QFrame::Raised);
         gridLayout_2 = new QGridLayout(frame);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
-        widget = new QWidget(frame);
+        viztabs = new QTabWidget(frame);
+        viztabs->setObjectName(QString::fromUtf8("viztabs"));
+        l1tab = new QWidget();
+        l1tab->setObjectName(QString::fromUtf8("l1tab"));
+        gridLayout_3 = new QGridLayout(l1tab);
+        gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
+        widget = new MemSimVis(l1tab);
         widget->setObjectName(QString::fromUtf8("widget"));
 
-        gridLayout_2->addWidget(widget, 0, 0, 1, 1);
+        gridLayout_3->addWidget(widget, 0, 0, 1, 1);
+
+        viztabs->addTab(l1tab, QString());
+        l2tab = new QWidget();
+        l2tab->setObjectName(QString::fromUtf8("l2tab"));
+        viztabs->addTab(l2tab, QString());
+        l3tab = new QWidget();
+        l3tab->setObjectName(QString::fromUtf8("l3tab"));
+        viztabs->addTab(l3tab, QString());
+
+        gridLayout_2->addWidget(viztabs, 0, 0, 1, 1);
 
 
         horizontalLayout->addWidget(frame);
@@ -550,7 +572,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 705, 27));
+        menubar->setGeometry(QRect(0, 0, 1178, 27));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         menuEdit = new QMenu(menubar);
@@ -574,6 +596,9 @@ public:
         QObject::connect(pgtblcheck, SIGNAL(clicked(bool)), tlbcheck, SLOT(setEnabled(bool)));
         QObject::connect(pgtblcheck, SIGNAL(clicked(bool)), swapcheck, SLOT(setEnabled(bool)));
 
+        viztabs->setCurrentIndex(0);
+
+
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
 
@@ -586,6 +611,9 @@ public:
         actionRun_stp->setText(QApplication::translate("MainWindow", "Run step", 0, QApplication::UnicodeUTF8));
         step_button->setText(QApplication::translate("MainWindow", "Step", 0, QApplication::UnicodeUTF8));
         finish_button->setText(QApplication::translate("MainWindow", "Finish", 0, QApplication::UnicodeUTF8));
+        viztabs->setTabText(viztabs->indexOf(l1tab), QApplication::translate("MainWindow", "L1", 0, QApplication::UnicodeUTF8));
+        viztabs->setTabText(viztabs->indexOf(l2tab), QApplication::translate("MainWindow", "L2", 0, QApplication::UnicodeUTF8));
+        viztabs->setTabText(viztabs->indexOf(l3tab), QApplication::translate("MainWindow", "L3", 0, QApplication::UnicodeUTF8));
         labsd->setText(QApplication::translate("MainWindow", "L1 acc", 0, QApplication::UnicodeUTF8));
         l->setText(QApplication::translate("MainWindow", "L1 miss", 0, QApplication::UnicodeUTF8));
         label_17->setText(QApplication::translate("MainWindow", "L2 acc", 0, QApplication::UnicodeUTF8));

@@ -112,6 +112,8 @@ class MemSimulation
 		simstate get_state() { return state; }
 		//! Clean device data
 		void clean_devs();
+		//! Get access array
+		quint64 * get_acc(QString & name, long * sets, long * assoc);
         private:
 		//! A constructor. It is private due to Singleton design pattern.
                 MemSimulation();
