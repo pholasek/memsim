@@ -335,7 +335,7 @@ void MemSimulation::init_memsim()
 
 void MemSimulation::start_memsim()
 {
-	this->state = RUNNING;
+	this->state = STOP;
 }
 
 void MemSimulation::stop_memsim()

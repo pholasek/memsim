@@ -32,6 +32,9 @@ void MemSimVis::paintEvent(QPaintEvent * event)
 	painter.setPen(pen);
 	painter.setBrush(brush);
 	
+	double max = 0.0;
+	double max_coef = 1.0;
+
 	for (int ys = 0; ys < assoc; ys++) {
 		painter.save();
 		painter.translate(0, ys*30);
@@ -39,10 +42,14 @@ void MemSimVis::paintEvent(QPaintEvent * event)
 			double accsum = 0;
 			for (int i = 0; i < sets; i++) {
 				accsum += values[i * assoc + ys];
-				qDebug() << values[i * assoc + ys]; 
 			}
 			accsum /= assoc;
-			brush.setColor(QColor(255,0,0,60));
+			if (accsum > 255 && accsum > max) {
+				max = accsum;
+				max_coef = max / 255;
+			}
+			accsum /= max_coef;
+			brush.setColor(QColor(255,0,0,static_cast<int>(accsum)));
 			painter.setBrush(brush);
 		}
 		painter.drawRect(rect);

@@ -20,6 +20,7 @@ MemSimGui::MemSimGui(QWidget *parent) : QMainWindow(parent)
 
 	sim.load_configuration();
 	read_settings();
+	refresh_vis();
 }
 
 MemSimGui::~MemSimGui()
@@ -307,15 +308,26 @@ void MemSimGui::refresh_vis()
 	QString l1("l1"), l2("l2"), l3("l3");
 
 	accl1 = sim.get_acc(l1, &l1sets, &l1assoc);
-	if (!accl1)
-		qDebug() << "NULL accmap";
-	ui->l1vis->set_assoc(l1assoc);
-	ui->l1vis->set_sets(l1sets);
-	ui->l1vis->set_values(accl1);
-	ui->l1vis->update();
-	//accl2 = sim.get_acc(l2, &l2sets, &l2assoc);
-	//accl3 = sim.get_acc(l3, &l3sets, &l3assoc);
-	//TODO
+	accl2 = sim.get_acc(l2, &l2sets, &l2assoc);
+	accl3 = sim.get_acc(l3, &l3sets, &l3assoc);
+	if (accl1) {
+		ui->l1vis->set_assoc(l1assoc);
+		ui->l1vis->set_sets(l1sets);
+		ui->l1vis->set_values(accl1);
+		ui->l1vis->update();
+	}
+	if (accl2) {
+		ui->l2vis->set_assoc(l2assoc);
+		ui->l2vis->set_sets(l2sets);
+		ui->l2vis->set_values(accl2);
+		ui->l2vis->update();
+	}
+	if (accl3) {
+		ui->l3vis->set_assoc(l3assoc);
+		ui->l3vis->set_sets(l3sets);
+		ui->l3vis->set_values(accl3);
+		ui->l3vis->update();
+	}
 }
 
 void MemSimGui::flush_sim()

@@ -61,7 +61,11 @@ public:
     QGridLayout *gridLayout_3;
     MemSimVis *l1vis;
     QWidget *l2tab;
+    QGridLayout *gridLayout;
+    MemSimVis *l2vis;
     QWidget *l3tab;
+    QGridLayout *gridLayout_4;
+    MemSimVis *l3vis;
     QFrame *frame_3;
     QFormLayout *formLayout_2;
     QLabel *labsd;
@@ -204,9 +208,23 @@ public:
         viztabs->addTab(l1tab, QString());
         l2tab = new QWidget();
         l2tab->setObjectName(QString::fromUtf8("l2tab"));
+        gridLayout = new QGridLayout(l2tab);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        l2vis = new MemSimVis(l2tab);
+        l2vis->setObjectName(QString::fromUtf8("l2vis"));
+
+        gridLayout->addWidget(l2vis, 0, 0, 1, 1);
+
         viztabs->addTab(l2tab, QString());
         l3tab = new QWidget();
         l3tab->setObjectName(QString::fromUtf8("l3tab"));
+        gridLayout_4 = new QGridLayout(l3tab);
+        gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
+        l3vis = new MemSimVis(l3tab);
+        l3vis->setObjectName(QString::fromUtf8("l3vis"));
+
+        gridLayout_4->addWidget(l3vis, 0, 0, 1, 1);
+
         viztabs->addTab(l3tab, QString());
 
         gridLayout_2->addWidget(viztabs, 0, 0, 1, 1);
@@ -596,7 +614,7 @@ public:
         QObject::connect(pgtblcheck, SIGNAL(clicked(bool)), tlbcheck, SLOT(setEnabled(bool)));
         QObject::connect(pgtblcheck, SIGNAL(clicked(bool)), swapcheck, SLOT(setEnabled(bool)));
 
-        viztabs->setCurrentIndex(0);
+        viztabs->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -615,13 +633,13 @@ public:
         viztabs->setTabText(viztabs->indexOf(l2tab), QApplication::translate("MainWindow", "L2", 0, QApplication::UnicodeUTF8));
         viztabs->setTabText(viztabs->indexOf(l3tab), QApplication::translate("MainWindow", "L3", 0, QApplication::UnicodeUTF8));
         labsd->setText(QApplication::translate("MainWindow", "L1 acc", 0, QApplication::UnicodeUTF8));
-        l->setText(QApplication::translate("MainWindow", "L1 miss", 0, QApplication::UnicodeUTF8));
+        l->setText(QApplication::translate("MainWindow", "L1 hit", 0, QApplication::UnicodeUTF8));
         label_17->setText(QApplication::translate("MainWindow", "L2 acc", 0, QApplication::UnicodeUTF8));
-        label_18->setText(QApplication::translate("MainWindow", "L2 miss", 0, QApplication::UnicodeUTF8));
+        label_18->setText(QApplication::translate("MainWindow", "L2 hit", 0, QApplication::UnicodeUTF8));
         label_19->setText(QApplication::translate("MainWindow", "L3 acc", 0, QApplication::UnicodeUTF8));
-        label_20->setText(QApplication::translate("MainWindow", "L3 miss", 0, QApplication::UnicodeUTF8));
+        label_20->setText(QApplication::translate("MainWindow", "L3 hit", 0, QApplication::UnicodeUTF8));
         label_21->setText(QApplication::translate("MainWindow", "TLB acc", 0, QApplication::UnicodeUTF8));
-        label_22->setText(QApplication::translate("MainWindow", "TLB miss", 0, QApplication::UnicodeUTF8));
+        label_22->setText(QApplication::translate("MainWindow", "TLB hit", 0, QApplication::UnicodeUTF8));
         label_23->setText(QApplication::translate("MainWindow", "Time", 0, QApplication::UnicodeUTF8));
         label_24->setText(QApplication::translate("MainWindow", "Accesses", 0, QApplication::UnicodeUTF8));
         l1check->setText(QApplication::translate("MainWindow", "L1", 0, QApplication::UnicodeUTF8));

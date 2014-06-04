@@ -39,9 +39,9 @@ MemDeviceCache::MemDeviceCache(mem_t type, int lat, quint64 size, long lsize, lo
         tag_shift = line_size_bits + log2(sets);
 
 	tags = new quint64[sets * assoc]; //! Guarantee of 64-bit space
-	memset(tags, 0, sets * assoc);
+	memset(tags, 0, sizeof(quint64) * sets * assoc);
 	accmap = new quint64[sets * assoc]; //! Guarantee of 64-bit space
-	memset(accmap, 0, sets * assoc);
+	memset(accmap, 0, sizeof(quint64) * sets * assoc);
 }
 
 MemDeviceCache::~MemDeviceCache()
@@ -60,11 +60,11 @@ void MemDeviceCache::refresh_cache()
 	if (!tags)
 		delete tags;
 	tags = new quint64[sets * assoc];
-	memset(tags, 0, sets * assoc);
+	memset(tags, 0, sizeof(quint64) * sets * assoc);
 	if (!accmap)
 		delete accmap;
 	accmap = new quint64[sets * assoc];
-	memset(accmap, 0, sets * assoc);
+	memset(accmap, 0, sizeof(quint64) * sets * assoc);
 }
 
 void MemDeviceCache::set_size(quint64 size)
