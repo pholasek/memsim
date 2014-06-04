@@ -304,6 +304,8 @@ class MemDeviceCache : public MemDevice
                 long tag_shift;
 		//! Data in cache.
                 quint64 *tags;
+		//! Accesses to cache
+		quint64 *accmap;
 		//! Cache statistics.
                 MemDeviceCacheStats stats;
 };

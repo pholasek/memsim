@@ -40,11 +40,14 @@ MemDeviceCache::MemDeviceCache(mem_t type, int lat, quint64 size, long lsize, lo
 
 	tags = new quint64[sets * assoc]; //! Guarantee of 64-bit space
 	memset(tags, 0, sets * assoc);
+	accmap = new quint64[sets * assoc]; //! Guarantee of 64-bit space
+	memset(tags, 0, sets * assoc);
 }
 
 MemDeviceCache::~MemDeviceCache()
 {
 	delete tags;
+	delete accmap;
 }
 
 void MemDeviceCache::refresh_cache()
@@ -58,6 +61,10 @@ void MemDeviceCache::refresh_cache()
 		delete tags;
 	tags = new quint64[sets * assoc];
 	memset(tags, 0, sets * assoc);
+	if (!accmap)
+		delete accmap;
+	accmap = new quint64[sets * assoc];
+	memset(accmap, 0, sets * assoc);
 }
 
 void MemDeviceCache::set_size(quint64 size)
@@ -92,6 +99,7 @@ int MemDeviceCache::do_mem_ref(quint64 addr, quint64 size)
    int i, j;
    bool is_miss = false;
    quint64* set;
+   quint64* acc;
 
    stats.inc_ac();
 
@@ -99,17 +107,20 @@ int MemDeviceCache::do_mem_ref(quint64 addr, quint64 size)
    if (set1 == set2) {
 
       set = &(tags[set1 * assoc]);
+      acc = &(accmap[set1 * assoc]);
 
       /* This loop is unrolled for just the first case, which is the most */
       /* common.  We can't unroll any further because it would screw up   */
       /* if we have a direct-mapped (1-way) cache.                        */
       if (tag == set[0]) {
+         acc[0] += 1;
          return HIT;
       }
       /* If the tag is one other than the MRU, move it into the MRU spot  */
       /* and shuffle the rest down.                                       */
       for (i = 1; i < assoc; i++) {
          if (tag == set[i]) {
+	    acc[i] += 1;
             for (j = i; j > 0; j--) {
                set[j] = set[j - 1];
             }
@@ -130,11 +141,14 @@ int MemDeviceCache::do_mem_ref(quint64 addr, quint64 size)
    /* Nb: this is a fast way of doing ((set1+1) % L.sets) */
    } else if (((set1 + 1) & (sets_min_1)) == set2) {
       set = &(tags[set1 * assoc]);
+      acc = &(accmap[set1 * assoc]);
       if (tag == set[0]) {
+	 acc[0] += 1;
          goto block2;
       }
       for (i = 1; i < assoc; i++) { //FIXME
          if (tag == set[i]) { /*HIT*/
+	    acc[i] += 1;
             for (j = i; j > 0; j--) {
                set[j] = set[j - 1];
             }
@@ -149,12 +163,15 @@ int MemDeviceCache::do_mem_ref(quint64 addr, quint64 size)
       is_miss = true;
 block2:
       set = &(tags[set2 * assoc]);
+      acc = &(accmap[set2 * assoc]);
       tag2 = (addr+size-1) >> tag_shift;
       if (tag2 == set[0]) {
+	 acc[0] += 1;
          goto miss_treatment;
       }
       for (i = 1; i < assoc; i++) { //FIXME
          if (tag2 == set[i]) { /*HIT*/
+	    acc[i] += 1;
             for (j = i; j > 0; j--) {
                set[j] = set[j - 1];
             }
@@ -174,7 +191,7 @@ miss_treatment:
       }
 
    } else {
-           qDebug() << "Cache panic!";
+           //qDebug() << "Cache panic!";
    }
    return FAULT;
 }

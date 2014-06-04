@@ -433,6 +433,7 @@ int MemSimulation::sim_trace_step(MemTrace * trace, int flush)
 	}
 
 	if (!step) {
+		devs.reset_devs();
 		devs.commit_changes();
 		cal.reset_calend();
 		this->state = RUNNING;
@@ -459,7 +460,6 @@ int MemSimulation::sim_trace_step(MemTrace * trace, int flush)
 
 	this->state = STOP;
 
-	devs.reset_devs();
 	trc->reset_trace();
 	step = 0;
 
@@ -470,6 +470,7 @@ void MemSimulation::sim_trace(MemTrace & trace)
 {
 	int end = 0;
 
+	devs.reset_devs();
 	devs.commit_changes();
 	cal.reset_calend();
 
@@ -482,7 +483,6 @@ void MemSimulation::sim_trace(MemTrace & trace)
 		sim_instr(e);
 	} while (!end);
 
-	devs.reset_devs();
 	trace.reset_trace();
 }
 
