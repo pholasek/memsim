@@ -41,7 +41,7 @@ MemDeviceCache::MemDeviceCache(mem_t type, int lat, quint64 size, long lsize, lo
 	tags = new quint64[sets * assoc]; //! Guarantee of 64-bit space
 	memset(tags, 0, sets * assoc);
 	accmap = new quint64[sets * assoc]; //! Guarantee of 64-bit space
-	memset(tags, 0, sets * assoc);
+	memset(accmap, 0, sets * assoc);
 }
 
 MemDeviceCache::~MemDeviceCache()

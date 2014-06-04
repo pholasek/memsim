@@ -14,6 +14,7 @@
 MemHierarchy::MemHierarchy() :  sim_dev(NULL), first_inst(NULL), first_data(NULL), last_dev(NULL), l1_i(NULL), l1_d(NULL), l2(NULL), l3(NULL), ram(NULL), swap(NULL), tlb(NULL), pg_table(NULL)
 {
 	name2type.insert("l1", L1_D);
+	name2type.insert("l1", L1_I);
 	name2type.insert("l2", L2);
 	name2type.insert("l3", L3);
 	name2type.insert("ram", RAM);
@@ -22,6 +23,7 @@ MemHierarchy::MemHierarchy() :  sim_dev(NULL), first_inst(NULL), first_data(NULL
 	name2type.insert("pt", PT);
 	name2type.insert("model", GENERIC);
 	type2name.insert(L1_D, "l1");
+	type2name.insert(L1_I, "l1");
 	type2name.insert(L2, "l2");
 	type2name.insert(L3, "l3");
 	type2name.insert(RAM, "ram");

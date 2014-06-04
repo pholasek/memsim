@@ -307,8 +307,14 @@ void MemSimGui::refresh_vis()
 	QString l1("l1"), l2("l2"), l3("l3");
 
 	accl1 = sim.get_acc(l1, &l1sets, &l1assoc);
-	accl2 = sim.get_acc(l2, &l2sets, &l2assoc);
-	accl3 = sim.get_acc(l3, &l3sets, &l3assoc);
+	if (!accl1)
+		qDebug() << "NULL accmap";
+	ui->l1vis->set_assoc(l1assoc);
+	ui->l1vis->set_sets(l1sets);
+	ui->l1vis->set_values(accl1);
+	ui->l1vis->update();
+	//accl2 = sim.get_acc(l2, &l2sets, &l2assoc);
+	//accl3 = sim.get_acc(l3, &l3sets, &l3assoc);
 	//TODO
 }
 

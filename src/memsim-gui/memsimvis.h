@@ -10,6 +10,8 @@
 #include <QPainter>
 #include <QBrush>
 #include <QPen>
+#include <QDebug>
+#include <cmath>
 
 class MemSimVis : public QWidget
 {

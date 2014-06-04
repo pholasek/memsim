@@ -93,7 +93,7 @@
              </attribute>
              <layout class="QGridLayout" name="gridLayout_3">
               <item row="0" column="0">
-               <widget class="MemSimVis" name="widget" native="true"/>
+               <widget class="MemSimVis" name="l1vis" native="true"/>
               </item>
              </layout>
             </widget>

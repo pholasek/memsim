@@ -59,7 +59,7 @@ public:
     QTabWidget *viztabs;
     QWidget *l1tab;
     QGridLayout *gridLayout_3;
-    MemSimVis *widget;
+    MemSimVis *l1vis;
     QWidget *l2tab;
     QWidget *l3tab;
     QFrame *frame_3;
@@ -196,10 +196,10 @@ public:
         l1tab->setObjectName(QString::fromUtf8("l1tab"));
         gridLayout_3 = new QGridLayout(l1tab);
         gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
-        widget = new MemSimVis(l1tab);
-        widget->setObjectName(QString::fromUtf8("widget"));
+        l1vis = new MemSimVis(l1tab);
+        l1vis->setObjectName(QString::fromUtf8("l1vis"));
 
-        gridLayout_3->addWidget(widget, 0, 0, 1, 1);
+        gridLayout_3->addWidget(l1vis, 0, 0, 1, 1);
 
         viztabs->addTab(l1tab, QString());
         l2tab = new QWidget();
