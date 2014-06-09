@@ -6,7 +6,7 @@
 #include "memsimvis.h"
 
 
-MemSimVis::MemSimVis(QWidget *parent) : QWidget(parent), values(NULL)
+MemSimVis::MemSimVis(QWidget *parent) : QWidget(parent), assoc(0), sets(0), values(NULL)
 {
 	setBackgroundRole(QPalette::Base);
 	setAutoFillBackground(true);
@@ -32,9 +32,14 @@ void MemSimVis::paintEvent(QPaintEvent * event)
 	painter.setPen(pen);
 	painter.setBrush(brush);
 	
-	double max = 0.0;
-	double max_coef = 1.0;
+	long bigsum = 0;
 
+	if (values) {
+		for (int j = 0; j < assoc; j++) {
+			for (int i = 0; i < sets; i++)
+				bigsum += values[i * assoc + j];
+		}
+	}
 	for (int ys = 0; ys < assoc; ys++) {
 		painter.save();
 		painter.translate(0, ys*30);
@@ -43,13 +48,8 @@ void MemSimVis::paintEvent(QPaintEvent * event)
 			for (int i = 0; i < sets; i++) {
 				accsum += values[i * assoc + ys];
 			}
-			accsum /= assoc;
-			if (accsum > 255 && accsum > max) {
-				max = accsum;
-				max_coef = max / 255;
-			}
-			accsum /= max_coef;
-			brush.setColor(QColor(255,0,0,static_cast<int>(accsum)));
+			double alpha = accsum ? 255*accsum/bigsum : 0;
+			brush.setColor(QColor(255,0,0,static_cast<int>(alpha)));
 			painter.setBrush(brush);
 		}
 		painter.drawRect(rect);

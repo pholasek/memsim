@@ -27,7 +27,7 @@ MemDevice::MemDevice(mem_t type = GENERIC, int latency = 1)
 MemDeviceCache::MemDeviceCache() : MemDevice(L1_D, 1) {}
 
 MemDeviceCache::MemDeviceCache(mem_t type, int lat, quint64 size, long lsize, long assoc) :
-        MemDevice(type, lat), tags(NULL)
+        MemDevice(type, lat), tags(NULL), accmap(NULL)
 {
         this->size = size;
         this->lsize = lsize;
