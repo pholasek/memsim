@@ -17,6 +17,8 @@ MemSimGui::MemSimGui(QWidget *parent) : QMainWindow(parent)
 	connect(ui->finish_button, SIGNAL(clicked()), this, SLOT(finish()));
 	connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(write_settings()));
 	connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(flush_sim()));
+	//this->setWindowState(this->windowState() | Qt::WindowFullScreen);
+	this->setWindowState(this->windowState() | Qt::WindowMaximized);
 
 	sim.load_configuration();
 	read_settings();
