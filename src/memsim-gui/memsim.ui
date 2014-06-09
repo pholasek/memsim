@@ -481,6 +481,9 @@
          </item>
          <item row="14" column="0">
           <widget class="QCheckBox" name="tlbcheck">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>TLB</string>
            </property>
@@ -539,6 +542,9 @@
          </item>
          <item row="18" column="0">
           <widget class="QCheckBox" name="pgtblcheck">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>Tabulka stránek</string>
            </property>
@@ -587,6 +593,9 @@
          </item>
          <item row="20" column="0">
           <widget class="QCheckBox" name="swapcheck">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>Swap</string>
            </property>

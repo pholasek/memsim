@@ -44,13 +44,13 @@ void MemSimGui::write_settings()
 	ui->l1size->setFocus();
 	obj = QString("l1");
 	param = QString("assoc");
-	sim.config_param(obj,param, QString().setNum(ui->l1size->value()));
+	sim.config_param(obj,param, QString().setNum(ui->l1assoc->value()));
 	ui->l1assoc->setFocus();
-	if (ui->l1check->isChecked())
-		sim.add_device(obj);
-	else
-		sim.remove_device(obj);
-	sim.set_l1split(ui->anoldradio->isChecked());
+	//if (ui->l1check->isChecked())
+	//	sim.add_device(obj);
+	//else
+	//	sim.remove_device(obj);
+	//sim.set_l1split(ui->anoldradio->isChecked());
 
 	obj = QString("l2");
 	param = QString("latency");
@@ -131,6 +131,8 @@ void MemSimGui::write_settings()
 		messageBox.setFixedSize(500,200);
 		return;
 	}
+
+	refresh_vis();
 }
 
 void MemSimGui::read_settings()
@@ -190,27 +192,27 @@ void MemSimGui::read_settings()
 	param = QString("latency");
 	ui->tlbmiss->setValue((sim.get_param(obj, param)).toUInt());
 
-	if (sim.has_pg_table()) {
-		obj = QString("tlb");
-		param = QString("active");
-		ui->tlbcheck->setChecked((sim.get_param(obj, param)).toBool());
-		obj = QString("tlb");
-		param = QString("latency");
-		ui->tlbmiss->setValue((sim.get_param(obj, param)).toUInt());
-		obj = QString("tlb");
-		param = QString("entries");
-		ui->tlbentries->setValue((sim.get_param(obj, param)).toUInt());
-		obj = QString("tlb");
-		param = QString("assoc");
-		ui->tlbassoc->setValue((sim.get_param(obj, param)).toUInt());
+	obj = QString("tlb");
+	param = QString("active");
+	ui->tlbcheck->setChecked((sim.get_param(obj, param)).toBool());
+	obj = QString("tlb");
+	param = QString("latency");
+	ui->tlbmiss->setValue((sim.get_param(obj, param)).toUInt());
+	obj = QString("tlb");
+	param = QString("entries");
+	ui->tlbentries->setValue((sim.get_param(obj, param)).toUInt());
+	obj = QString("tlb");
+	param = QString("assoc");
+	ui->tlbassoc->setValue((sim.get_param(obj, param)).toUInt());
 
-		obj = QString("swap");
-		param = QString("active");
-		ui->swapcheck->setChecked((sim.get_param(obj, param)).toBool());
-		obj = QString("swap");
-		param = QString("latency");
-		ui->swapmiss->setValue((sim.get_param(obj, param)).toUInt());
-	} else {
+	obj = QString("swap");
+	param = QString("active");
+	ui->swapcheck->setChecked((sim.get_param(obj, param)).toBool());
+	obj = QString("swap");
+	param = QString("latency");
+	ui->swapmiss->setValue((sim.get_param(obj, param)).toUInt());
+
+	if (!sim.has_pg_table()) {
 		ui->tlbcheck->setCheckable(false);
 		ui->swapcheck->setCheckable(false);
 	}
@@ -267,7 +269,14 @@ void MemSimGui::finish()
 	
 	curr_trace = ui->tabWidget->indexOf(ui->tabWidget->currentWidget());
 
-	step = sim.run_trace_step(curr_trace,1);
+	try {
+		step = sim.run_trace_step(curr_trace,1);
+	} catch (UserInputBadTraceId &ex) { 
+		QMessageBox messageBox;
+		messageBox.critical(0,"Error","Non-existing trace file.");
+		messageBox.setFixedSize(500,200);
+		return;
+	}
 	QListView * tv = qobject_cast<QListView*>(ui->tabWidget->currentWidget());
 	QModelIndex new_index = tv->model()->index(step,0);
 	tv->setCurrentIndex(new_index);
@@ -280,7 +289,7 @@ void MemSimGui::refresh_stats()
 {
 	QString stats = sim.show_statsall(1);
 
-	QRegExp rx("time:(\\d+) allacc:(\\d+) l1acc:(\\d+) l1missratio:(\\d+[\\.\\d]*) l2acc:(\\d+) l2missratio:(\\d+[\\.\\d]*) l3acc:(\\d+) l3missratio:(\\d+[\\.\\d]*)");
+	QRegExp rx("time:(\\d+) allacc:(\\d+) l1acc:(\\d+) l1missratio:(\\d+[\\.\\d]*) l2acc:(\\d+) l2missratio:(\\d+[\\.\\d]*) l3acc:(\\d+) l3missratio:(\\d+[\\.\\d]*)"); // tlbacc:(\\d+) tlbmissratio:(\\d+[\\.\\d]*) ");
 
 	int pos = rx.indexIn(stats);
 	

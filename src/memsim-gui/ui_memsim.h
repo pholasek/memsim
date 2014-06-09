@@ -496,6 +496,7 @@ public:
 
         tlbcheck = new QCheckBox(frame_2);
         tlbcheck->setObjectName(QString::fromUtf8("tlbcheck"));
+        tlbcheck->setEnabled(true);
 
         formLayout->setWidget(14, QFormLayout::LabelRole, tlbcheck);
 
@@ -537,6 +538,7 @@ public:
 
         pgtblcheck = new QCheckBox(frame_2);
         pgtblcheck->setObjectName(QString::fromUtf8("pgtblcheck"));
+        pgtblcheck->setEnabled(true);
 
         formLayout->setWidget(18, QFormLayout::LabelRole, pgtblcheck);
 
@@ -571,6 +573,7 @@ public:
 
         swapcheck = new QCheckBox(frame_2);
         swapcheck->setObjectName(QString::fromUtf8("swapcheck"));
+        swapcheck->setEnabled(true);
 
         formLayout->setWidget(20, QFormLayout::LabelRole, swapcheck);
 

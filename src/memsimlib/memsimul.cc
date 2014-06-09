@@ -528,12 +528,11 @@ void MemSimulation::set_cfg_param(QString & object, QString & param, QString & v
 
 	mem_t type = devs.get_type(object);
 
-	qDebug() << object << type << value;
-
 	valid_cfg_param(type, param, value.toUInt());
 
 	switch (type) {
 		case L1_D:
+		case L1_I:
 		case L2:
 		case L3:
 			devs.config_cache(type, param, value.toULong());

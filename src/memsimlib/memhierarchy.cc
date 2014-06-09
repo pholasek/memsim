@@ -13,8 +13,8 @@
 //! Constructor && destructor
 MemHierarchy::MemHierarchy() :  sim_dev(NULL), first_inst(NULL), first_data(NULL), last_dev(NULL), l1_i(NULL), l1_d(NULL), l2(NULL), l3(NULL), ram(NULL), swap(NULL), tlb(NULL), pg_table(NULL)
 {
-	name2type.insert("l1", L1_D);
 	name2type.insert("l1", L1_I);
+	name2type.insert("l1", L1_D);
 	name2type.insert("l2", L2);
 	name2type.insert("l3", L3);
 	name2type.insert("ram", RAM);
@@ -22,8 +22,8 @@ MemHierarchy::MemHierarchy() :  sim_dev(NULL), first_inst(NULL), first_data(NULL
 	name2type.insert("tlb", TLB);
 	name2type.insert("pt", PT);
 	name2type.insert("model", GENERIC);
-	type2name.insert(L1_D, "l1");
 	type2name.insert(L1_I, "l1");
+	type2name.insert(L1_D, "l1");
 	type2name.insert(L2, "l2");
 	type2name.insert(L3, "l3");
 	type2name.insert(RAM, "ram");
@@ -113,7 +113,7 @@ inline MemDevice * MemHierarchy::assign_p(mem_t type)
 			return l1_d;
 			break;
 		case L1_I:
-			return l1_i;
+			return l1_d;
 			break;
 		case L2:
 			return l2;
@@ -497,8 +497,9 @@ QString MemHierarchy::show_stats(int parseable)
 
 	for (int i = 0; i < dev_num; i++) {
 		switch ((mem_t) i) {
-			case L1_D:
 			case L1_I:
+				break;
+			case L1_D:
 			case L2:
 			case L3:
 				out += show_cache_stats((mem_t) i, parseable);
