@@ -43,16 +43,21 @@ void MemSimVis::paintEvent(QPaintEvent * event)
 	for (int ys = 0; ys < assoc; ys++) {
 		painter.save();
 		painter.translate(0, ys*30);
+		double alpha = 0;
 		if (values) {
 			double accsum = 0;
 			for (int i = 0; i < sets; i++) {
 				accsum += values[i * assoc + ys];
 			}
-			double alpha = accsum ? 255*accsum/bigsum : 0;
+			alpha = accsum ? 255*accsum/bigsum : 0;
 			brush.setColor(QColor(255,0,0,static_cast<int>(alpha)));
 			painter.setBrush(brush);
 		}
 		painter.drawRect(rect);
+		QFont font = painter.font();
+		font.setPointSize(12);
+		painter.setFont(font);
+		painter.drawText(QPoint(200, 70), QString("%1\%").arg(alpha/255*100, 0, 'f', 3));
 		painter.restore();
 	}
 
